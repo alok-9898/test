@@ -18,7 +18,6 @@ export default function RoleSidebar({ role, onLogout }) {
     { to: '/dashboard/talent/profile', label: 'Profile', icon: User },
     { to: '/dashboard/talent/opportunities', label: 'Opportunities', icon: Briefcase },
     { to: '/dashboard/talent/matches', label: 'My Matches', icon: Target },
-    { to: '/dashboard/talent/co-founders', label: 'Co-Founders', icon: Users },
   ]
 
   const investorLinks = [

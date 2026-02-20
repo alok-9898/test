@@ -123,18 +123,24 @@ async def match_talent_to_startup(
     
     # Use job-specific skills if job_id is provided, else use startup general skills
     required_skills = [s.lower() for s in (startup.required_skills or [])]
+    
+    # Also include tech stack in the keyword pool for general startup matching
+    startup_keywords = list(required_skills)
+    if startup.tech_stack:
+        startup_keywords.extend([s.lower() for s in startup.tech_stack])
+    
     if job_id:
         job_result = await db.execute(
             select(JobPosting).where(JobPosting.id == job_id)
         )
         job = job_result.scalars().first()
         if job:
-            required_skills = [s.lower() for s in (job.required_skills or [])]
+            startup_keywords = [s.lower() for s in (job.required_skills or [])]
 
-    keyword_score = calculate_jaccard_similarity(talent_skills, required_skills)
+    keyword_score = calculate_jaccard_similarity(talent_skills, startup_keywords)
     print(f"DEBUG: Matching {talent.name} to {startup.name}")
     print(f"DEBUG: Talent Skills: {talent_skills}")
-    print(f"DEBUG: Required Skills: {required_skills}")
+    print(f"DEBUG: Startup Keywords: {startup_keywords}")
     print(f"DEBUG: Keyword Score: {keyword_score}")
     
     # Score B: Semantic Match (40%)

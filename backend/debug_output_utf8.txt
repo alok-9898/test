@@ -1,0 +1,14 @@
+﻿--- Talent Profiles ---
+Name: Milan Paudel, Skills: [{'name': 'mysql', 'proficiency': 'Intermediate'}, {'name': 'nodejs', 'proficiency': 'Intermediate'}, {'name': 'fastapi', 'proficiency': 'Intermediate'}, {'name': 'postgresql', 'proficiency': 'Intermediate'}, {'name': 'MongoDB', 'proficiency': 'Intermediate'}]
+Name: Alok Sharma, Skills: [{'name': 'python', 'proficiency': 'Intermediate'}, {'name': 'scikitlearn', 'proficiency': 'Intermediate'}, {'name': 'tensorflow', 'proficiency': 'Intermediate'}, {'name': 'pytorch', 'proficiency': 'Intermediate'}, {'name': 'keras', 'proficiency': 'Intermediate'}]
+
+--- Startup Profiles ---
+Name: dot group, Required Skills: ['React'], Tech Stack: ['React', 'MongoDB', 'Python', 'mysql', 'nodejs']
+Name: Test Startup, Required Skills: None, Tech Stack: None
+
+--- Embeddings ---
+User ID: e9be4540-b742-4925-be75-4883b2f16019, Source: thesis
+User ID: 0f99f01c-46d6-46d2-b58d-b4048b87a67d, Source: profile
+User ID: 66eb6525-5f80-4b75-9e54-6c8b00987877, Source: thesis
+User ID: e08424b7-ac1c-47e6-9500-093609c3a831, Source: profile
+User ID: bb618914-47b1-4252-a9ef-f0f68a5d7c48, Source: profile
