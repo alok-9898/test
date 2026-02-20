@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
+import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ProtectedRoute from './components/shared/ProtectedRoute'
@@ -13,6 +14,7 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <Login />} />
       <Route path="/register" element={token ? <Navigate to="/dashboard" /> : <Register />} />
 
@@ -33,8 +35,6 @@ function App() {
               <Navigate to="/dashboard/talent" replace />
         } />
       </Route>
-
-      <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }
