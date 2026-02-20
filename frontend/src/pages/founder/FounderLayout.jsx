@@ -1,0 +1,20 @@
+import { Routes, Route } from 'react-router-dom'
+import FounderHome from './FounderHome'
+import StartupProfileBuilder from './StartupProfileBuilder'
+import TalentMatchList from './TalentMatchList'
+import InvestorMatchList from './InvestorMatchList'
+import PitchCoPilot from './PitchCoPilot'
+import TeamGapAnalysis from './TeamGapAnalysis'
+
+export default function FounderLayout() {
+  return (
+    <Routes>
+      <Route index element={<FounderHome />} />
+      <Route path="profile" element={<StartupProfileBuilder />} />
+      <Route path="talent-matches" element={<TalentMatchList />} />
+      <Route path="investor-matches" element={<InvestorMatchList />} />
+      <Route path="pitch-copilot" element={<PitchCoPilot />} />
+      <Route path="team-gaps" element={<TeamGapAnalysis />} />
+    </Routes>
+  )
+}
