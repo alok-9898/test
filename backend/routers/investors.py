@@ -120,3 +120,35 @@ async def update_investor_thesis(
     await store_embedding(db, str(current_user.id), embedding, "thesis")
     
     return {"message": "Thesis updated", "completeness_score": profile.completeness_score}
+@router.get("/all")
+async def get_all_investors(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get all investor profiles for the network view."""
+    if current_user.role != UserRole.INVESTOR:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    if settings.USE_MOCK_DATA:
+        # Return a list containing the mock investor
+        return [MOCK_INVESTOR_PROFILE]
+    
+    result = await db.execute(
+        select(InvestorProfile)
+    )
+    profiles = result.scalars().all()
+    
+    return [
+        {
+            "id": str(p.id),
+            "user_id": str(p.user_id),
+            "name": p.name,
+            "fund": p.fund,
+            "type": p.type,
+            "investment_stage": p.investment_stage,
+            "preferred_sectors": p.preferred_sectors,
+            "geography_focus": p.geography_focus,
+            "completeness_score": p.completeness_score
+        }
+        for p in profiles
+    ]

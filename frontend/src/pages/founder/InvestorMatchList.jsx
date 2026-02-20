@@ -1,51 +1,104 @@
 import { useQuery } from '@tanstack/react-query'
 import { getInvestorMatches } from '../../api/matches'
-import MatchScoreRing from '../../components/shared/MatchScoreRing'
-import ConnectionButton from '../../components/shared/ConnectionButton'
 import PageHeader from '../../components/shared/PageHeader'
+import MatchScoreRing from '../../components/shared/MatchScoreRing'
 import EmptyState from '../../components/shared/EmptyState'
-import { TrendingUp } from 'lucide-react'
+import { TrendingUp, Search, Filter, Mail, Link as LinkIcon, DollarSign } from 'lucide-react'
+import { useState } from 'react'
 
 export default function InvestorMatchList() {
+  const [searchTerm, setSearchTerm] = useState('')
   const { data: matches = [], isLoading } = useQuery({
     queryKey: ['investorMatches'],
     queryFn: getInvestorMatches,
   })
 
-  if (isLoading) {
-    return <div className="p-6">Loading...</div>
-  }
+  const filteredMatches = (matches || []).filter(match =>
+    match.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    match.fund?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    match.type?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <div>
-      <PageHeader title="Investor Matches" subtitle="Find investors aligned with your startup" />
-      
-      <div className="p-6">
-        {matches.length === 0 ? (
+      <PageHeader title="Venture Pipeline" subtitle="Discover capital partners aligned with your industry and stage." />
+
+      <div className="p-8 space-y-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+            <input
+              type="text"
+              placeholder="Filter by fund name, stage, or sector focus..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="input-field pl-12 py-3 w-full"
+            />
+          </div>
+          <div className="flex gap-2 w-full md:w-auto">
+            <button className="premium-button btn-secondary flex items-center gap-2 px-6">
+              <Filter size={18} /> Mandate Check
+            </button>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[1, 2].map(i => <div key={i} className="glass-card h-64 animate-pulse bg-white/5" />)}
+          </div>
+        ) : filteredMatches.length === 0 ? (
           <EmptyState
             icon={TrendingUp}
-            title="No matches yet"
-            message="Complete your startup profile to find matched investors"
+            title="Capital Pipeline Empty"
+            message="No investors match your current profile or filters."
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {matches.map((match) => (
-              <div key={match.investor_id} className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold">{match.name}</h3>
-                    <p className="text-sm text-gray-600">{match.fund || match.type}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {filteredMatches.map((match) => (
+              <div key={match.investor_id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full bg-slate-900/40">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center font-bold text-amber-500 text-2xl border border-white/5 shadow-inner uppercase">
+                    {match.name?.[0]}
                   </div>
-                  <MatchScoreRing score={match.match_percentage} />
+                  <MatchScoreRing score={match.match_percentage} size={50} />
                 </div>
 
-                <div className="mb-4">
-                  <p className="text-xs text-gray-500">
-                    Industry/Stage: {match.score_breakdown?.industry_stage?.toFixed(2) || 0} | Semantic: {match.score_breakdown?.semantic?.toFixed(2) || 0}
-                  </p>
+                <h3 className="text-xl font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight mb-2">
+                  {match.name}
+                </h3>
+                <p className="text-sm font-medium text-amber-500/80 mt-1 uppercase tracking-widest text-[10px]">
+                  {match.fund || match.type}
+                </p>
+
+                <div className="flex-1 mt-6 space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Thesis Alignment</h4>
+                      <p className="text-xs text-slate-300">{(match.score_breakdown?.semantic * 100).toFixed(0)}% Semantic Match</p>
+                    </div>
+                    <div>
+                      <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Check Size</h4>
+                      <div className="flex items-center gap-1 text-emerald-500">
+                        <DollarSign size={12} />
+                        <span className="text-xs font-bold">Matched Mandate</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <ConnectionButton targetId={match.investor_id} targetRole="INVESTOR" />
+                <div className="pt-8 mt-8 border-t border-white/5 flex items-center justify-between">
+                  <div className="flex gap-3">
+                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                      <Mail size={16} />
+                    </button>
+                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                      <LinkIcon size={16} />
+                    </button>
+                  </div>
+                  <button className="premium-button btn-secondary px-8 py-2 text-xs">
+                    Review Thesis
+                  </button>
+                </div>
               </div>
             ))}
           </div>

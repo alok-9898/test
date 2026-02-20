@@ -6,8 +6,9 @@ export default function RoleSidebar({ role, onLogout }) {
   const { currentUser } = useAuth()
 
   const founderLinks = [
-    { to: '/dashboard/founder', label: 'Dashboard', icon: Home },
+    { to: '/dashboard/founder', label: 'Dashboard', icon: Home, end: true },
     { to: '/dashboard/founder/profile', label: 'Startup Profile', icon: User },
+    { to: '/dashboard/founder/jobs', label: 'Job Postings', icon: Briefcase },
     { to: '/dashboard/founder/talent-matches', label: 'Talent Matches', icon: Users },
     { to: '/dashboard/founder/investor-matches', label: 'Investor Matches', icon: TrendingUp },
     { to: '/dashboard/founder/pitch-copilot', label: 'Pitch Co-Pilot', icon: FileText },
@@ -15,16 +16,15 @@ export default function RoleSidebar({ role, onLogout }) {
   ]
 
   const talentLinks = [
-    { to: '/dashboard/talent', label: 'Dashboard', icon: Home },
+    { to: '/dashboard/talent', label: 'Dashboard', icon: Home, end: true },
     { to: '/dashboard/talent/profile', label: 'Profile', icon: User },
     { to: '/dashboard/talent/opportunities', label: 'Opportunities', icon: Briefcase },
     { to: '/dashboard/talent/matches', label: 'My Matches', icon: Target },
     { to: '/dashboard/talent/co-founders', label: 'Co-Founders', icon: Users },
-    { to: '/dashboard/talent/grants', label: 'Grants', icon: FileText },
   ]
 
   const investorLinks = [
-    { to: '/dashboard/investor', label: 'Dashboard', icon: Home },
+    { to: '/dashboard/investor', label: 'Dashboard', icon: Home, end: true },
     { to: '/dashboard/investor/thesis', label: 'Thesis', icon: FileText },
     { to: '/dashboard/investor/deal-flow', label: 'Deal Flow', icon: TrendingUp },
     { to: '/dashboard/investor/network', label: 'Network', icon: Users },
@@ -52,6 +52,7 @@ export default function RoleSidebar({ role, onLogout }) {
             <NavLink
               key={link.to}
               to={link.to}
+              end={link.end}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
                   ? 'bg-amber-500/10 text-amber-500 shadow-[inset_0_0_20px_rgba(245,158,11,0.05)]'
@@ -59,10 +60,14 @@ export default function RoleSidebar({ role, onLogout }) {
                 }`
               }
             >
-              <Icon size={20} className="transition-transform duration-200 group-hover:scale-110" />
-              <span className="font-medium">{link.label}</span>
-              {({ isActive }) => isActive && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_10px_#f59e0b]"></div>
+              {({ isActive }) => (
+                <>
+                  <Icon size={20} className="transition-transform duration-200 group-hover:scale-110" />
+                  <span className="font-medium">{link.label}</span>
+                  {isActive && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_10px_#f59e0b]"></div>
+                  )}
+                </>
               )}
             </NavLink>
           )

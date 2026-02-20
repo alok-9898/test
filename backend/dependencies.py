@@ -26,9 +26,11 @@ async def get_current_user(
 ) -> User:
     """Dependency to get current authenticated user."""
     token = credentials.credentials
+    # print(f"DEBUG: Received token: {token[:10]}...{token[-10:]}")
     payload = decode_token(token)
     
     if not payload:
+        print(f"Auth Failed: Token decode returned None")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials"

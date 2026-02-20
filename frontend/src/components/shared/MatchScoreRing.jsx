@@ -1,34 +1,52 @@
-export default function MatchScoreRing({ score }) {
-  const circumference = 2 * Math.PI * 45
-  const offset = circumference - (score / 100) * circumference
+export default function MatchScoreRing({ score, size = 96 }) {
+  const radius = (size / 2) - 6
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (Math.min(score || 0, 100) / 100) * circumference
+
+  const color =
+    score >= 70 ? '#10b981'   // emerald
+      : score >= 40 ? '#f59e0b' // amber
+        : '#ef4444'               // red
+
+  const svgSize = size
 
   return (
-    <div className="relative w-24 h-24">
-      <svg className="transform -rotate-90 w-24 h-24">
+    <div className="relative shrink-0" style={{ width: svgSize, height: svgSize }}>
+      <svg
+        width={svgSize}
+        height={svgSize}
+        className="transform -rotate-90"
+      >
+        {/* Track */}
         <circle
-          cx="48"
-          cy="48"
-          r="45"
-          stroke="currentColor"
-          strokeWidth="6"
+          cx={svgSize / 2}
+          cy={svgSize / 2}
+          r={radius}
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth="5"
           fill="none"
-          className="text-gray-200"
         />
+        {/* Progress */}
         <circle
-          cx="48"
-          cy="48"
-          r="45"
-          stroke="currentColor"
-          strokeWidth="6"
+          cx={svgSize / 2}
+          cy={svgSize / 2}
+          r={radius}
+          stroke={color}
+          strokeWidth="5"
           fill="none"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          className="text-accent transition-all duration-500"
           strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.6s ease, stroke 0.4s ease' }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-lg font-bold text-gray-900">{Math.round(score)}%</span>
+        <span
+          className="font-black text-white"
+          style={{ fontSize: svgSize * 0.21 }}
+        >
+          {Math.round(score || 0)}%
+        </span>
       </div>
     </div>
   )

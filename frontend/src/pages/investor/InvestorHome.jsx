@@ -33,15 +33,18 @@ export default function InvestorHome() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="glass-card p-6 group hover:border-amber-500/30 transition-all duration-300">
             <div className="flex items-center gap-4">
               <div className="p-4 bg-amber-500/10 rounded-2xl group-hover:bg-amber-500/20 transition-colors">
                 <TrendingUp className="text-amber-500" size={28} />
               </div>
-              <div>
-                <p className="text-sm font-medium text-slate-400">New Matches</p>
-                <p className="text-2xl font-bold text-slate-100">{matches.length}</p>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Pipeline</p>
+                <div className="flex items-end gap-2 mt-1">
+                  <p className="text-2xl font-bold text-slate-100">{matches.length}</p>
+                  <p className="text-[10px] text-emerald-500 font-bold mb-1">+24%</p>
+                </div>
               </div>
             </div>
           </div>
@@ -51,9 +54,12 @@ export default function InvestorHome() {
               <div className="p-4 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500/20 transition-colors">
                 <Briefcase className="text-emerald-500" size={28} />
               </div>
-              <div>
-                <p className="text-sm font-medium text-slate-400">Portfolio</p>
-                <p className="text-2xl font-bold text-slate-100">0</p>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Portfolio</p>
+                <div className="flex items-end gap-2 mt-1">
+                  <p className="text-2xl font-bold text-slate-100">0</p>
+                  <p className="text-[10px] text-slate-500 font-bold mb-1">Active</p>
+                </div>
               </div>
             </div>
           </div>
@@ -63,62 +69,65 @@ export default function InvestorHome() {
               <div className="p-4 bg-purple-500/10 rounded-2xl group-hover:bg-purple-500/20 transition-colors">
                 <Users className="text-purple-500" size={28} />
               </div>
-              <div>
-                <p className="text-sm font-medium text-slate-400">Pending Deals</p>
-                <p className="text-2xl font-bold text-slate-100">0</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-card p-6 group hover:border-amber-500/30 transition-all duration-300">
-            <div className="flex items-center gap-4">
-              <div className="p-4 bg-amber-500/10 rounded-2xl group-hover:bg-amber-500/20 transition-colors">
-                <TrendingUp className="text-amber-500" size={28} />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-slate-400">Syndicates</p>
-                <p className="text-2xl font-bold text-slate-100">0</p>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Network</p>
+                <div className="flex items-end gap-2 mt-1">
+                  <p className="text-2xl font-bold text-slate-100">0</p>
+                  <p className="text-[10px] text-slate-500 font-bold mb-1">Founders</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="glass-card p-8">
-          <div className="flex items-center justify-between mb-8">
+        <section className="space-y-6">
+          <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-slate-100">Investment Deal Flow</h2>
-              <p className="text-sm text-slate-400 mt-1">Founders aligned with your thesis</p>
+              <h2 className="text-2xl font-bold text-slate-100">High Resolution Deal Flow</h2>
+              <p className="text-sm text-slate-400 mt-1">AI-indexed founders matching your specific thesis signals</p>
             </div>
           </div>
 
           {topMatches.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {topMatches.map((match) => (
-                <div key={match.investor_id} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center font-bold text-amber-500 text-xl overflow-hidden shadow-inner uppercase">
+                <div key={match.startup_id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full bg-slate-900/40">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center font-bold text-amber-500 text-2xl border border-white/5 shadow-inner uppercase">
                       {match.name?.[0]}
                     </div>
-                    <MatchScoreRing score={match.match_percentage} />
+                    <MatchScoreRing score={match.match_percentage} size={50} />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-100 mb-1 group-hover:text-amber-500 transition-colors">{match.name}</h3>
-                  <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">{match.fund || match.type}</p>
-                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-xs font-semibold px-2 py-1 bg-amber-500/10 text-amber-500 rounded-md">High Alpha</span>
-                    <button className="text-xs text-amber-500 hover:text-amber-400 font-medium">Review Deck</button>
+
+                  <h3 className="text-xl font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight mb-2">
+                    {match.name}
+                  </h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-8 flex-1 line-clamp-3">
+                    {match.tagline}
+                  </p>
+
+                  <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase">Sector Match</span>
+                      <span className="text-[10px] text-emerald-500 font-bold uppercase mt-1">Optimized</span>
+                    </div>
+                    <button className="premium-button btn-secondary px-6 py-2 text-xs">
+                      Deep Audit
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="py-16 text-center">
-              <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/5">
-                <Briefcase className="text-slate-600" size={32} />
+            <div className="glass-card py-20 text-center">
+              <div className="w-20 h-20 bg-slate-800/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
+                <Briefcase className="text-slate-700" size={40} />
               </div>
-              <p className="text-slate-400 font-medium italic">Scanning pipeline for new opportunities...</p>
+              <h4 className="text-lg font-bold text-slate-300">Pipeline Empty</h4>
+              <p className="text-slate-500 mt-2 max-w-sm mx-auto text-sm">Our engines are scanning for new founders. Refine your thesis to increase match fidelity.</p>
             </div>
           )}
-        </div>
+        </section>
       </div>
     </div>
   )

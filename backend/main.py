@@ -35,9 +35,9 @@ async def startup_event():
     if not settings.USE_MOCK_DATA:
         await init_db()
     else:
-        print("🚀 Running in MOCK DATA mode - no database required!")
-        print("📝 Login with: founder@neplaunch.com / talent@neplaunch.com / investor@neplaunch.com")
-        print("🔑 Password: password123")
+        print("Running in MOCK DATA mode - no database required!")
+        print("Login with: founder@neplaunch.com / talent@neplaunch.com / investor@neplaunch.com")
+        print("Password: password123")
 
 
 @app.get("/")

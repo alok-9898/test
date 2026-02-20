@@ -1,11 +1,10 @@
-"""Founder/Startup routes."""
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 from database import get_db
-from models import User, StartupProfile, UserRole
+from models import User, StartupProfile, UserRole, JobPosting
 from dependencies import get_current_user
 from matching import generate_embedding, store_embedding
 from datetime import datetime
@@ -35,6 +34,26 @@ class StartupProfileUpdate(BaseModel):
     team_members: Optional[List[Dict]] = None
 
 
+class JobPostingCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    requirements: Optional[str] = None
+    required_skills: Optional[List[str]] = None
+    location: Optional[str] = None
+    job_type: Optional[str] = None
+    compensation: Optional[str] = None
+
+
+class JobPostingUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    requirements: Optional[str] = None
+    required_skills: Optional[List[str]] = None
+    location: Optional[str] = None
+    job_type: Optional[str] = None
+    compensation: Optional[str] = None
+
+
 @router.get("/profile")
 async def get_startup_profile(
     current_user: User = Depends(get_current_user),
@@ -45,29 +64,7 @@ async def get_startup_profile(
         raise HTTPException(status_code=403, detail="Access denied")
     
     if settings.USE_MOCK_DATA:
-        # Return mock profile
-        return {
-            "id": MOCK_STARTUP_PROFILE["id"],
-            "user_id": MOCK_STARTUP_PROFILE["user_id"],
-            "name": MOCK_STARTUP_PROFILE["name"],
-            "tagline": MOCK_STARTUP_PROFILE["tagline"],
-            "industry": MOCK_STARTUP_PROFILE["industry"],
-            "stage": MOCK_STARTUP_PROFILE["stage"],
-            "website": MOCK_STARTUP_PROFILE["website"],
-            "founding_year": MOCK_STARTUP_PROFILE["founding_year"],
-            "mrr": MOCK_STARTUP_PROFILE["mrr"],
-            "user_count": MOCK_STARTUP_PROFILE["user_count"],
-            "growth_rate": MOCK_STARTUP_PROFILE["growth_rate"],
-            "funding_goal": MOCK_STARTUP_PROFILE["funding_goal"],
-            "equity_offered": MOCK_STARTUP_PROFILE["equity_offered"],
-            "use_of_funds": MOCK_STARTUP_PROFILE["use_of_funds"],
-            "tech_stack": MOCK_STARTUP_PROFILE["tech_stack"],
-            "required_skills": MOCK_STARTUP_PROFILE["required_skills"],
-            "problem_statement": MOCK_STARTUP_PROFILE["problem_statement"],
-            "team_members": MOCK_STARTUP_PROFILE["team_members"],
-            "open_roles_count": MOCK_STARTUP_PROFILE["open_roles_count"],
-            "completeness_score": MOCK_STARTUP_PROFILE["completeness_score"]
-        }
+        return MOCK_STARTUP_PROFILE
     
     result = await db.execute(
         select(StartupProfile).where(StartupProfile.user_id == current_user.id)
@@ -117,7 +114,6 @@ async def update_startup_profile(
     profile = result.scalar_one_or_none()
     
     if not profile:
-        # Create new profile
         profile = StartupProfile(user_id=current_user.id)
         db.add(profile)
     
@@ -143,3 +139,160 @@ async def update_startup_profile(
     await store_embedding(db, str(current_user.id), embedding, "profile")
     
     return {"message": "Profile updated", "completeness_score": profile.completeness_score}
+
+
+@router.post("/jobs")
+async def create_job(
+    job_data: JobPostingCreate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Create a new job posting."""
+    if current_user.role != UserRole.FOUNDER:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    result = await db.execute(
+        select(StartupProfile).where(StartupProfile.user_id == current_user.id)
+    )
+    profile = result.scalar_one_or_none()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Startup profile not found")
+    
+    job = JobPosting(
+        startup_id=profile.id,
+        title=job_data.title,
+        description=job_data.description,
+        requirements=job_data.requirements,
+        required_skills=job_data.required_skills or [],
+        location=job_data.location,
+        job_type=job_data.job_type,
+        compensation=job_data.compensation,
+        created_at=datetime.utcnow().isoformat(),
+        updated_at=datetime.utcnow().isoformat()
+    )
+    db.add(job)
+    await db.commit()
+    await db.refresh(job)
+    return {
+        "id": str(job.id),
+        "startup_id": str(job.startup_id),
+        "title": job.title,
+        "description": job.description,
+        "requirements": job.requirements,
+        "required_skills": job.required_skills,
+        "location": job.location,
+        "job_type": job.job_type,
+        "compensation": job.compensation,
+        "created_at": job.created_at,
+        "updated_at": job.updated_at,
+    }
+
+
+@router.get("/jobs")
+async def get_my_jobs(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get all jobs posted by the current startup."""
+    if current_user.role != UserRole.FOUNDER:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    result = await db.execute(
+        select(StartupProfile).where(StartupProfile.user_id == current_user.id)
+    )
+    profile = result.scalar_one_or_none()
+    if not profile:
+        return []
+    
+    result = await db.execute(
+        select(JobPosting).where(JobPosting.startup_id == profile.id)
+    )
+    jobs = result.scalars().all()
+    return [{
+        "id": str(j.id),
+        "startup_id": str(j.startup_id),
+        "title": j.title,
+        "description": j.description,
+        "requirements": j.requirements,
+        "required_skills": j.required_skills or [],
+        "location": j.location,
+        "job_type": j.job_type,
+        "compensation": j.compensation,
+        "created_at": j.created_at,
+        "updated_at": j.updated_at,
+    } for j in jobs]
+
+
+@router.put("/jobs/{job_id}")
+async def update_job(
+    job_id: str,
+    job_data: JobPostingUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Update a job posting."""
+    if current_user.role != UserRole.FOUNDER:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    result = await db.execute(
+        select(StartupProfile).where(StartupProfile.user_id == current_user.id)
+    )
+    profile = result.scalar_one_or_none()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Startup profile not found")
+    
+    result = await db.execute(
+        select(JobPosting).where(JobPosting.id == job_id, JobPosting.startup_id == profile.id)
+    )
+    job = result.scalar_one_or_none()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found or unauthorized")
+    
+    update_data = job_data.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(job, key, value)
+    job.updated_at = datetime.utcnow().isoformat()
+    
+    await db.commit()
+    await db.refresh(job)
+    return {
+        "id": str(job.id),
+        "startup_id": str(job.startup_id),
+        "title": job.title,
+        "description": job.description,
+        "requirements": job.requirements,
+        "required_skills": job.required_skills or [],
+        "location": job.location,
+        "job_type": job.job_type,
+        "compensation": job.compensation,
+        "created_at": job.created_at,
+        "updated_at": job.updated_at,
+    }
+
+
+@router.delete("/jobs/{job_id}")
+async def delete_job(
+    job_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete a job posting."""
+    if current_user.role != UserRole.FOUNDER:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Verify ownership
+    result = await db.execute(
+        select(StartupProfile).where(StartupProfile.user_id == current_user.id)
+    )
+    profile = result.scalar_one_or_none()
+    
+    result = await db.execute(
+        select(JobPosting).where(JobPosting.id == job_id, JobPosting.startup_id == profile.id)
+    )
+    job = result.scalar_one_or_none()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found or unauthorized")
+    
+    await db.delete(job)
+    await db.commit()
+    return {"message": "Job deleted"}

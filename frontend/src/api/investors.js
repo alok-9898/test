@@ -1,9 +1,16 @@
-import { MOCK_INVESTOR_PROFILE } from '../mockData'
+import client from './client'
 
 export const getInvestorThesis = async () => {
-  return MOCK_INVESTOR_PROFILE
+  const response = await client.get('/investor/thesis')
+  return response.data
 }
 
 export const updateInvestorThesis = async (data) => {
-  return { message: 'Thesis updated', completeness_score: 88.0 }
+  const response = await client.patch('/investor/thesis', data)
+  return response.data
+}
+
+export const getAllInvestors = async () => {
+  const response = await client.get('/investor/all')
+  return response.data
 }

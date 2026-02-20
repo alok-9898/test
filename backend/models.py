@@ -66,13 +66,9 @@ class TalentProfile(Base):
     location = Column(String(100))
     skills = Column(JSON)  # [{name: str, proficiency: str}]
     bio = Column(Text)
-    resume_url = Column(String(500))  # S3 URL
+    cv_path = Column(String(500))  # Local path to uploaded CV
     experience_level = Column(String(50))
-    engagement_preferences = Column(JSON)  # [EngagementType]
-    compensation_min = Column(Integer)
-    compensation_max = Column(Integer)
     portfolio_links = Column(JSON)  # [{type: str, url: str}]
-    education = Column(JSON)  # {institution: str, program: str, graduation_year: int}
     completeness_score = Column(Float, default=0.0)
     updated_at = Column(String(50))
     
@@ -106,6 +102,25 @@ class StartupProfile(Base):
     updated_at = Column(String(50))
     
     user = relationship("User", back_populates="startup_profile")
+    job_postings = relationship("JobPosting", back_populates="startup")
+
+
+class JobPosting(Base):
+    __tablename__ = "job_postings"
+    
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    startup_id = Column(String(36), ForeignKey("startup_profiles.id"), nullable=False)
+    title = Column(String(255), nullable=False)
+    description = Column(Text)
+    requirements = Column(Text)
+    required_skills = Column(JSON)  # ["Python", "React", etc.]
+    location = Column(String(100))
+    job_type = Column(String(50))  # full-time, part-time, etc.
+    compensation = Column(String(100))
+    created_at = Column(String(50))
+    updated_at = Column(String(50))
+    
+    startup = relationship("StartupProfile", back_populates="job_postings")
 
 
 class InvestorProfile(Base):

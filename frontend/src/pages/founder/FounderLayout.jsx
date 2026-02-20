@@ -5,6 +5,7 @@ import TalentMatchList from './TalentMatchList'
 import InvestorMatchList from './InvestorMatchList'
 import PitchCoPilot from './PitchCoPilot'
 import TeamGapAnalysis from './TeamGapAnalysis'
+import JobBoard from './JobBoard'
 
 export default function FounderLayout() {
   return (
@@ -15,6 +16,7 @@ export default function FounderLayout() {
       <Route path="investor-matches" element={<InvestorMatchList />} />
       <Route path="pitch-copilot" element={<PitchCoPilot />} />
       <Route path="team-gaps" element={<TeamGapAnalysis />} />
+      <Route path="jobs" element={<JobBoard />} />
     </Routes>
   )
 }

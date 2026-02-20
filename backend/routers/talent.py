@@ -1,5 +1,4 @@
-"""Talent routes."""
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel
@@ -11,6 +10,9 @@ from matching import generate_embedding, store_embedding
 from datetime import datetime
 from config import settings
 from mock_data import MOCK_TALENT_PROFILE
+import os
+import shutil
+import uuid
 
 router = APIRouter()
 
@@ -22,11 +24,7 @@ class TalentProfileUpdate(BaseModel):
     skills: Optional[List[Dict]] = None  # [{name: str, proficiency: str}]
     bio: Optional[str] = None
     experience_level: Optional[str] = None
-    engagement_preferences: Optional[List[str]] = None
-    compensation_min: Optional[int] = None
-    compensation_max: Optional[int] = None
     portfolio_links: Optional[List[Dict]] = None
-    education: Optional[Dict] = None
 
 
 @router.get("/profile")
@@ -48,11 +46,8 @@ async def get_talent_profile(
             "skills": MOCK_TALENT_PROFILE["skills"],
             "bio": MOCK_TALENT_PROFILE["bio"],
             "experience_level": MOCK_TALENT_PROFILE["experience_level"],
-            "engagement_preferences": MOCK_TALENT_PROFILE["engagement_preferences"],
-            "compensation_min": MOCK_TALENT_PROFILE["compensation_min"],
-            "compensation_max": MOCK_TALENT_PROFILE["compensation_max"],
             "portfolio_links": MOCK_TALENT_PROFILE["portfolio_links"],
-            "education": MOCK_TALENT_PROFILE["education"],
+            "cv_path": None,
             "completeness_score": MOCK_TALENT_PROFILE["completeness_score"]
         }
     
@@ -73,11 +68,8 @@ async def get_talent_profile(
         "skills": profile.skills,
         "bio": profile.bio,
         "experience_level": profile.experience_level,
-        "engagement_preferences": profile.engagement_preferences,
-        "compensation_min": profile.compensation_min,
-        "compensation_max": profile.compensation_max,
         "portfolio_links": profile.portfolio_links,
-        "education": profile.education,
+        "cv_path": profile.cv_path,
         "completeness_score": profile.completeness_score
     }
 
@@ -109,8 +101,7 @@ async def update_talent_profile(
     profile.updated_at = datetime.utcnow().isoformat()
     
     # Calculate completeness score
-    fields = ["name", "headline", "skills", "bio", "experience_level", 
-              "engagement_preferences", "education"]
+    fields = ["name", "headline", "skills", "bio", "experience_level"]
     filled = sum(1 for field in fields if getattr(profile, field))
     profile.completeness_score = (filled / len(fields)) * 100
     
@@ -124,3 +115,39 @@ async def update_talent_profile(
     await store_embedding(db, str(current_user.id), embedding, "profile")
     
     return {"message": "Profile updated", "completeness_score": profile.completeness_score}
+
+
+@router.post("/upload-cv")
+async def upload_cv(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Upload talent CV."""
+    if current_user.role != UserRole.TALENT:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Ensure cv directory exists
+    cv_dir = os.path.join(os.getcwd(), "cv")
+    if not os.path.exists(cv_dir):
+        os.makedirs(cv_dir)
+    
+    # Generate unique filename
+    file_ext = os.path.splitext(file.filename)[1]
+    filename = f"{current_user.id}_{uuid.uuid4().hex}{file_ext}"
+    file_path = os.path.join(cv_dir, filename)
+    
+    # Save file
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Update profile with relative path
+    result = await db.execute(
+        select(TalentProfile).where(TalentProfile.user_id == current_user.id)
+    )
+    profile = result.scalar_one_or_none()
+    if profile:
+        profile.cv_path = f"cv/{filename}"
+        await db.commit()
+    
+    return {"message": "CV uploaded successfully", "cv_path": f"cv/{filename}"}

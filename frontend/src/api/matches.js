@@ -1,21 +1,31 @@
-import { MOCK_TALENT_MATCHES, MOCK_INVESTOR_MATCHES, MOCK_STARTUP_MATCHES } from '../mockData'
+import client from './client'
 
 export const getTalentMatches = async () => {
-  return MOCK_TALENT_MATCHES
+  const response = await client.get('/matches/talent')
+  return response.data
 }
 
 export const getInvestorMatches = async () => {
-  return MOCK_INVESTOR_MATCHES
+  const response = await client.get('/matches/investors')
+  return response.data
 }
 
 export const getStartupMatches = async () => {
-  return MOCK_STARTUP_MATCHES
+  const response = await client.get('/matches/startups')
+  return response.data
+}
+
+export const getJobMatches = async () => {
+  const response = await client.get('/matches/jobs')
+  return response.data
 }
 
 export const requestConnection = async (targetId, message) => {
-  return { message: 'Connection request sent', match_id: `match-${Date.now()}` }
+  const response = await client.post('/matches/connections/request', { target_id: targetId, message })
+  return response.data
 }
 
 export const getConnections = async () => {
-  return { sent: [], received: [] }
+  const response = await client.get('/matches/connections')
+  return response.data
 }

@@ -41,13 +41,8 @@ async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
 
 async def get_user_by_id(db: AsyncSession, user_id: str) -> Optional[User]:
     """Get user by ID."""
-    from uuid import UUID
-    try:
-        uuid_id = UUID(user_id)
-        result = await db.execute(select(User).where(User.id == uuid_id))
-        return result.scalar_one_or_none()
-    except ValueError:
-        return None
+    result = await db.execute(select(User).where(User.id == user_id))
+    return result.scalar_one_or_none()
 
 
 def decode_token(token: str) -> Optional[dict]:
@@ -55,5 +50,6 @@ def decode_token(token: str) -> Optional[dict]:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         return payload
-    except JWTError:
+    except JWTError as e:
+        print(f"JWT Decode Error: {str(e)}")
         return None

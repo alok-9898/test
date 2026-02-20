@@ -71,142 +71,161 @@ export default function InvestorThesisBuilder() {
     <div>
       <PageHeader title="Investment Thesis" subtitle="Define your investment criteria" />
 
-      <div className="p-6">
+      <div className="p-8 space-y-8 max-w-7xl mx-auto">
         {profile && (
-          <div className="mb-6">
-            <ProfileCompleteness
-              score={profile.completeness_score || 0}
-              missingFields={[]}
-            />
+          <div className="glass-card bg-emerald-500/5 border-emerald-500/20 p-8 flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-slate-100 mb-2">Thesis Robustness</h3>
+              <p className="text-sm text-slate-400">A complete thesis helps our AI engine route high-alpha deals to your pipeline.</p>
+            </div>
+            <div className="w-full md:w-64">
+              <ProfileCompleteness
+                score={profile.completeness_score || 0}
+                missingFields={[]}
+              />
+            </div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="glass-card p-8 space-y-8">
-          <section>
-            <h3 className="text-xl font-semibold mb-6 gradient-text">Investor Info</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            <section className="glass-card p-8 space-y-8">
+              <h3 className="text-xl font-semibold gradient-text">Investment Philosophy</h3>
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Name</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="input-field"
+                <label className="block text-sm font-medium text-slate-400 mb-4 font-mono uppercase tracking-widest text-[10px]">Your Thesis Statement</label>
+                <textarea
+                  value={formData.thesis_text}
+                  onChange={(e) => setFormData({ ...formData, thesis_text: e.target.value })}
+                  rows="12"
+                  placeholder="Outline your unique perspective on the market, what you look for in founders, and your value-add..."
+                  className="input-field leading-relaxed"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Fund/Organization</label>
-                <input
-                  type="text"
-                  value={formData.fund}
-                  onChange={(e) => setFormData({ ...formData, fund: e.target.value })}
-                  className="input-field"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Type</label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="input-field"
-                >
-                  <option value="">Select type</option>
-                  <option value="angel">Angel Investor</option>
-                  <option value="vc">VC</option>
-                  <option value="diaspora">Diaspora Investor</option>
-                </select>
-              </div>
-            </div>
-          </section>
+            </section>
 
-          <section>
-            <h3 className="text-xl font-semibold mb-6 gradient-text">Investment Criteria</h3>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Preferred Sectors (comma-separated)</label>
-                <input
-                  type="text"
-                  value={formData.preferred_sectors}
-                  onChange={(e) => setFormData({ ...formData, preferred_sectors: e.target.value })}
-                  placeholder="SaaS, Fintech, EdTech"
-                  className="input-field"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Investment Stages (comma-separated)</label>
-                <input
-                  type="text"
-                  value={formData.investment_stage}
-                  onChange={(e) => setFormData({ ...formData, investment_stage: e.target.value })}
-                  placeholder="pre-seed, seed, series-a"
-                  className="input-field"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-6">
+            <section className="glass-card p-8">
+              <h3 className="text-xl font-semibold mb-8 gradient-text">Organization Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Check Size Min ($)</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Investor Full Name</label>
                   <input
-                    type="number"
-                    value={formData.check_size_min}
-                    onChange={(e) => setFormData({ ...formData, check_size_min: e.target.value })}
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="input-field"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Check Size Max ($)</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Fund / Entity Name</label>
                   <input
-                    type="number"
-                    value={formData.check_size_max}
-                    onChange={(e) => setFormData({ ...formData, check_size_max: e.target.value })}
+                    type="text"
+                    value={formData.fund}
+                    onChange={(e) => setFormData({ ...formData, fund: e.target.value })}
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Investor Class</label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    className="input-field"
+                  >
+                    <option value="">Select type</option>
+                    <option value="angel">Angel Investor</option>
+                    <option value="vc">Venture Capital</option>
+                    <option value="diaspora">Diaspora Fund</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Geographic Mandate</label>
+                  <select
+                    value={formData.geography_focus}
+                    onChange={(e) => setFormData({ ...formData, geography_focus: e.target.value })}
+                    className="input-field"
+                  >
+                    <option value="">Select geography</option>
+                    <option value="Nepal-only">Nepal Primary</option>
+                    <option value="Nepal + South Asia">Regional (South Asia)</option>
+                    <option value="Global">Unrestricted / Global</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div className="space-y-8">
+            <section className="glass-card p-8">
+              <h3 className="text-xl font-semibold mb-6 gradient-text">Target Criteria</h3>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Sectors</label>
+                  <input
+                    type="text"
+                    value={formData.preferred_sectors}
+                    onChange={(e) => setFormData({ ...formData, preferred_sectors: e.target.value })}
+                    placeholder="Fintech, Healthtech..."
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Stages</label>
+                  <input
+                    type="text"
+                    value={formData.investment_stage}
+                    onChange={(e) => setFormData({ ...formData, investment_stage: e.target.value })}
+                    placeholder="SaaS, Pre-seed..."
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Check Sizes (USD)</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="number"
+                      value={formData.check_size_min}
+                      onChange={(e) => setFormData({ ...formData, check_size_min: e.target.value })}
+                      placeholder="Min"
+                      className="input-field text-center"
+                    />
+                    <input
+                      type="number"
+                      value={formData.check_size_max}
+                      onChange={(e) => setFormData({ ...formData, check_size_max: e.target.value })}
+                      placeholder="Max"
+                      className="input-field text-center"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Key Signals</label>
+                  <textarea
+                    value={formData.key_signals}
+                    onChange={(e) => setFormData({ ...formData, key_signals: e.target.value })}
+                    placeholder="Founder background, traction metrics..."
+                    rows="4"
                     className="input-field"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Geography Focus</label>
-                <select
-                  value={formData.geography_focus}
-                  onChange={(e) => setFormData({ ...formData, geography_focus: e.target.value })}
-                  className="input-field"
+
+              <div className="mt-8 pt-6 border-t border-white/5">
+                <button
+                  type="submit"
+                  disabled={updateMutation.isPending}
+                  className="w-full premium-button btn-primary"
                 >
-                  <option value="">Select geography</option>
-                  <option value="Nepal-only">Nepal Only</option>
-                  <option value="Nepal + South Asia">Nepal + South Asia</option>
-                  <option value="Global">Global</option>
-                </select>
+                  {updateMutation.isPending ? 'Syncing...' : 'Deploy Thesis'}
+                </button>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Key Signals (comma-separated)</label>
-                <input
-                  type="text"
-                  value={formData.key_signals}
-                  onChange={(e) => setFormData({ ...formData, key_signals: e.target.value })}
-                  placeholder="strong team, B2B SaaS, social impact"
-                  className="input-field"
-                />
-              </div>
+            </section>
+
+            <div className="glass-card p-6 bg-amber-500/5 border-amber-500/10">
+              <h4 className="text-sm font-bold text-amber-500 mb-2 uppercase tracking-wide">Pro Tip</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Be specific about your "anti-thesis" or what you avoid. This improves match quality by 40%.
+              </p>
             </div>
-          </section>
-
-          <section>
-            <h3 className="text-xl font-semibold mb-6 gradient-text">Thesis Statement</h3>
-            <textarea
-              value={formData.thesis_text}
-              onChange={(e) => setFormData({ ...formData, thesis_text: e.target.value })}
-              rows="8"
-              placeholder="Describe your investment thesis..."
-              className="input-field"
-            />
-          </section>
-
-          <div className="flex justify-end pt-4">
-            <button
-              type="submit"
-              disabled={updateMutation.isPending}
-              className="premium-button btn-primary"
-            >
-              {updateMutation.isPending ? 'Saving...' : 'Save Thesis'}
-            </button>
           </div>
         </form>
       </div>

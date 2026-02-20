@@ -2,10 +2,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 from pydantic import BaseModel
 from typing import List
 from database import get_db
-from models import User, Match, MatchStatus, TalentProfile, StartupProfile, InvestorProfile, UserRole
+from models import User, Match, MatchStatus, TalentProfile, StartupProfile, InvestorProfile, UserRole, JobPosting
 from dependencies import get_current_user
 from matching import match_talent_to_startup, match_startup_to_investor
 from datetime import datetime
@@ -137,7 +138,7 @@ async def request_connection(
     """Send a connection request."""
     new_match = Match(
         requester_id=current_user.id,
-        target_id=UUID(request.target_id),
+        target_id=request.target_id,
         message=request.message,
         status=MatchStatus.PENDING,
         created_at=datetime.utcnow().isoformat()
@@ -148,6 +149,62 @@ async def request_connection(
     await db.refresh(new_match)
     
     return {"message": "Connection request sent", "match_id": str(new_match.id)}
+
+
+@router.get("/jobs")
+async def get_job_matches(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get matched jobs for talent, ranked by skill overlap."""
+    if current_user.role != UserRole.TALENT:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    if settings.USE_MOCK_DATA:
+        return MOCK_STARTUP_MATCHES
+    
+    # Get talent profile to extract skills
+    talent_result = await db.execute(
+        select(TalentProfile).where(TalentProfile.user_id == current_user.id)
+    )
+    talent = talent_result.scalar_one_or_none()
+    talent_skills = set()
+    if talent and talent.skills:
+        # skills is [{name: str, proficiency: str}, ...]
+        talent_skills = {s["name"].lower() for s in talent.skills if isinstance(s, dict) and "name" in s}
+
+    result = await db.execute(
+        select(JobPosting).options(joinedload(JobPosting.startup))
+    )
+    all_jobs = result.scalars().all()
+    
+    matches = []
+    for job in all_jobs:
+        # Calculate skill overlap
+        job_skills = set(s.lower() for s in (job.required_skills or []))
+        if job_skills and talent_skills:
+            overlap = len(talent_skills & job_skills)
+            skill_score = min(100, int((overlap / len(job_skills)) * 100))
+        else:
+            skill_score = 50  # neutral score if no skills defined
+        
+        matches.append({
+            "job_id": str(job.id),
+            "startup_id": str(job.startup.id),
+            "title": job.title,
+            "description": job.description,
+            "location": job.location,
+            "job_type": job.job_type,
+            "compensation": job.compensation,
+            "required_skills": job.required_skills or [],
+            "startup_name": job.startup.name,
+            "industry": job.startup.industry,
+            "match_percentage": skill_score,
+        })
+    
+    # Sort by skill match score descending
+    matches.sort(key=lambda x: x["match_percentage"], reverse=True)
+    return matches
 
 
 @router.get("/connections")
