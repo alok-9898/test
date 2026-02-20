@@ -21,12 +21,6 @@ const LandingPage = () => {
                         </div>
 
                         <div className="hidden md:flex items-center space-x-8">
-                            <a href="#features" className="text-sm font-medium text-white/65 hover:text-white transition-colors">
-                                Features
-                            </a>
-                            <a href="#how-it-works" className="text-sm font-medium text-white/65 hover:text-white transition-colors">
-                                Methodology
-                            </a>
                             <Link
                                 to="/login"
                                 className="text-sm font-medium px-6 py-2 border-[1.5px] border-white/25 rounded-full text-white/80 hover:text-white transition-all"
