@@ -76,10 +76,12 @@ def calculate_jaccard_similarity(set1: List[str], set2: List[str]) -> float:
 async def match_talent_to_startup(
     db: AsyncSession,
     talent_id: str,
-    startup_id: str
+    startup_id: str,
+    job_id: Optional[str] = None
 ) -> Dict:
     """Match talent to a startup role using hybrid scoring."""
     from uuid import UUID
+    from models import JobPosting
     
     # Get talent profile
     talent_result = await db.execute(
@@ -98,8 +100,17 @@ async def match_talent_to_startup(
     
     # Score A: Keyword Match (60%)
     talent_skills = [s.get("name", "") for s in (talent.skills or [])]
-    required_skills = startup.required_skills or []
     
+    # Use job-specific skills if job_id is provided, else use startup general skills
+    required_skills = startup.required_skills or []
+    if job_id:
+        job_result = await db.execute(
+            select(JobPosting).where(JobPosting.id == UUID(job_id))
+        )
+        job = job_result.scalar_one_or_none()
+        if job:
+            required_skills = job.required_skills or []
+
     keyword_score = calculate_jaccard_similarity(talent_skills, required_skills)
     
     # Score B: Semantic Match (40%)

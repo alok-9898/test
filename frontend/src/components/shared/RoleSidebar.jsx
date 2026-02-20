@@ -9,9 +9,7 @@ export default function RoleSidebar({ role, onLogout }) {
     { to: '/dashboard/founder', label: 'Dashboard', icon: Home, end: true },
     { to: '/dashboard/founder/profile', label: 'Startup Profile', icon: User },
     { to: '/dashboard/founder/jobs', label: 'Job Postings', icon: Briefcase },
-    { to: '/dashboard/founder/talent-matches', label: 'Talent Matches', icon: Users },
     { to: '/dashboard/founder/investor-matches', label: 'Investor Matches', icon: TrendingUp },
-    { to: '/dashboard/founder/pitch-copilot', label: 'Pitch Co-Pilot', icon: FileText },
     { to: '/dashboard/founder/team-gaps', label: 'Team Gaps', icon: Target },
   ]
 

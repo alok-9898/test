@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from database import get_db
 from models import User, Match, MatchStatus, TalentProfile, StartupProfile, InvestorProfile, UserRole, JobPosting
 from dependencies import get_current_user
@@ -20,14 +20,16 @@ router = APIRouter()
 class ConnectionRequest(BaseModel):
     target_id: str
     message: str
+    job_id: Optional[str] = None
 
 
 @router.get("/talent")
 async def get_talent_matches(
+    job_id: Optional[str] = None,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get matched talent for founder's startup."""
+    """Get matched talent for founder's startup or specific job."""
     if current_user.role != UserRole.FOUNDER:
         raise HTTPException(status_code=403, detail="Access denied")
     
@@ -46,10 +48,25 @@ async def get_talent_matches(
     
     if not startup:
         return []
-    
+
+    # If job_id provided, match specifically for that job
+    target_skills = startup.required_skills
+    if job_id:
+        job_result = await db.execute(
+            select(JobPosting).where(JobPosting.id == UUID(job_id))
+        )
+        job = job_result.scalar_one_or_none()
+        if job:
+            target_skills = job.required_skills
+
     matches = []
     for talent in all_talent:
-        match_result = await match_talent_to_startup(db, str(talent.user_id), str(current_user.id))
+        match_result = await match_talent_to_startup(
+            db, 
+            str(talent.user_id), 
+            str(current_user.id),
+            job_id=job_id
+        )
         if "error" not in match_result:
             matches.append({
                 "talent_id": str(talent.user_id),
@@ -138,7 +155,8 @@ async def request_connection(
     """Send a connection request."""
     new_match = Match(
         requester_id=current_user.id,
-        target_id=request.target_id,
+        target_id=UUID(request.target_id),
+        job_id=UUID(request.job_id) if request.job_id else None,
         message=request.message,
         status=MatchStatus.PENDING,
         created_at=datetime.utcnow().isoformat()
@@ -149,6 +167,50 @@ async def request_connection(
     await db.refresh(new_match)
     
     return {"message": "Connection request sent", "match_id": str(new_match.id)}
+
+
+@router.get("/jobs/{job_id}/applicants")
+async def get_job_applicants(
+    job_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get talents who expressed interest in a specific job."""
+    if current_user.role != UserRole.FOUNDER:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Verify job belongs to founder
+    job_result = await db.execute(
+        select(JobPosting)
+        .join(StartupProfile)
+        .where(JobPosting.id == UUID(job_id), StartupProfile.user_id == current_user.id)
+    )
+    job = job_result.scalar_one_or_none()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    # Get matches for this job
+    matches_result = await db.execute(
+        select(Match)
+        .where(Match.job_id == UUID(job_id))
+        .options(joinedload(Match.requester).joinedload(User.talent_profile))
+    )
+    matches = matches_result.scalars().all()
+
+    applicants = []
+    for m in matches:
+        if m.requester.talent_profile:
+            applicants.append({
+                "match_id": str(m.id),
+                "talent_id": str(m.requester.id),
+                "name": m.requester.talent_profile.name,
+                "headline": m.requester.talent_profile.headline,
+                "message": m.message,
+                "status": m.status.value,
+                "created_at": m.created_at
+            })
+    
+    return applicants
 
 
 @router.get("/jobs")
@@ -191,6 +253,7 @@ async def get_job_matches(
         matches.append({
             "job_id": str(job.id),
             "startup_id": str(job.startup.id),
+            "founder_user_id": str(job.startup.user_id),
             "title": job.title,
             "description": job.description,
             "location": job.location,
@@ -227,6 +290,7 @@ async def get_connections(
         "sent": [{
             "id": str(m.id),
             "target_id": str(m.target_id),
+            "job_id": str(m.job_id) if m.job_id else None,
             "status": m.status.value,
             "message": m.message,
             "created_at": m.created_at
@@ -234,6 +298,7 @@ async def get_connections(
         "received": [{
             "id": str(m.id),
             "requester_id": str(m.requester_id),
+            "job_id": str(m.job_id) if m.job_id else None,
             "status": m.status.value,
             "message": m.message,
             "created_at": m.created_at

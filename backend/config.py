@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     DB_NAME: str = "launchnepal"
     
     # JWT
-    SECRET_KEY: str = "your-secret-key-change-in-production"
+    SECRET_KEY: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
@@ -43,7 +43,7 @@ class Settings(BaseSettings):
         raise ValueError(v)
     
     # Mock mode (for development without database)
-    USE_MOCK_DATA: bool = True  # Set to False when database is ready (can also be set via env var)
+    USE_MOCK_DATA: bool = False  # Set to False when database is ready (can also be set via env var)
     
     class Config:
         env_file = ".env"

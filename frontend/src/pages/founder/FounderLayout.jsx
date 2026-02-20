@@ -12,9 +12,7 @@ export default function FounderLayout() {
     <Routes>
       <Route index element={<FounderHome />} />
       <Route path="profile" element={<StartupProfileBuilder />} />
-      <Route path="talent-matches" element={<TalentMatchList />} />
       <Route path="investor-matches" element={<InvestorMatchList />} />
-      <Route path="pitch-copilot" element={<PitchCoPilot />} />
       <Route path="team-gaps" element={<TeamGapAnalysis />} />
       <Route path="jobs" element={<JobBoard />} />
     </Routes>

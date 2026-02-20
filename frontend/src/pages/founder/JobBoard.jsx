@@ -3,8 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMyJobs, createJob, updateJob, deleteJob } from '../../api/founders'
 import PageHeader from '../../components/shared/PageHeader'
 import EmptyState from '../../components/shared/EmptyState'
-import { Briefcase, Plus, Trash2, MapPin, DollarSign, Clock, X, Pencil, Check, Tag } from 'lucide-react'
+import { Briefcase, Plus, Trash2, MapPin, DollarSign, Clock, X, Pencil, Check, Tag, Users, UserCheck } from 'lucide-react'
 import { useNotification } from '../../contexts/NotificationContext'
+import { getTalentMatches, getJobApplicants } from '../../api/matches'
+import MatchScoreRing from '../../components/shared/MatchScoreRing'
 
 const EMPTY_FORM = {
     title: '',
@@ -155,9 +157,109 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
     )
 }
 
+function MatchedTalentsModal({ jobId, onClose }) {
+    const { data: matches = [], isLoading } = useQuery({
+        queryKey: ['jobMatches', jobId],
+        queryFn: () => getTalentMatches(jobId)
+    })
+
+    return (
+        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="glass-card w-full max-w-4xl p-8 space-y-6 relative bg-slate-900 max-h-[90vh] overflow-y-auto border-amber-500/20 shadow-2xl">
+                <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-slate-100 transition-colors">
+                    <X size={24} />
+                </button>
+
+                <div>
+                    <h3 className="text-2xl font-bold gradient-text">Matched High-Caliber Talent</h3>
+                    <p className="text-slate-400 text-sm mt-1">Discover candidates whose skills align perfectly with this role.</p>
+                </div>
+
+                {isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-white/5 animate-pulse rounded-xl" />)}
+                    </div>
+                ) : matches.length === 0 ? (
+                    <EmptyState icon={Users} title="No precise matches yet" message="Adjust the required skills to broaden your pipeline." />
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {matches.map(match => (
+                            <div key={match.talent_id} className="glass-card p-6 bg-white/5 border-white/5 hover:border-amber-500/30 transition-all flex items-start gap-4">
+                                <div className="flex-1">
+                                    <h4 className="font-bold text-slate-100">{match.name}</h4>
+                                    <p className="text-xs text-slate-400 mb-3">{match.headline}</p>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {match.matched_skills?.map(s => (
+                                            <span key={s} className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-[10px] font-bold border border-emerald-500/20">
+                                                {s}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <MatchScoreRing score={match.match_percentage} size={45} />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+
+function ApplicantsModal({ jobId, onClose }) {
+    const { data: applicants = [], isLoading } = useQuery({
+        queryKey: ['jobApplicants', jobId],
+        queryFn: () => getJobApplicants(jobId)
+    })
+
+    return (
+        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="glass-card w-full max-w-2xl p-8 space-y-6 relative bg-slate-900 max-h-[90vh] overflow-y-auto border-emerald-500/20 shadow-2xl">
+                <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-slate-100 transition-colors">
+                    <X size={24} />
+                </button>
+
+                <div>
+                    <h3 className="text-2xl font-bold text-emerald-500">Interested Applicants</h3>
+                    <p className="text-slate-400 text-sm mt-1">Talents who have expressed interest in this specific opportunity.</p>
+                </div>
+
+                {isLoading ? (
+                    <div className="space-y-4">
+                        {[1, 2].map(i => <div key={i} className="h-24 bg-white/5 animate-pulse rounded-xl" />)}
+                    </div>
+                ) : applicants.length === 0 ? (
+                    <EmptyState icon={UserCheck} title="No applicants yet" message="Potential candidates are currently reviewing your posting." />
+                ) : (
+                    <div className="space-y-4">
+                        {applicants.map(app => (
+                            <div key={app.match_id} className="glass-card p-6 bg-white/5 border-white/5 hover:bg-white/10 transition-colors">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h4 className="font-bold text-slate-100">{app.name}</h4>
+                                    <span className="text-[10px] font-bold text-emerald-500 uppercase px-2 py-1 bg-emerald-500/10 rounded-full">
+                                        Interested
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-400 mb-4">{app.headline}</p>
+                                {app.message && (
+                                    <div className="p-3 bg-slate-950/50 rounded-lg border border-white/5 italic text-sm text-slate-300">
+                                        "{app.message}"
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+
 export default function JobBoard() {
     const [isAdding, setIsAdding] = useState(false)
     const [editingJob, setEditingJob] = useState(null)
+    const [viewingMatches, setViewingMatches] = useState(null)
+    const [viewingApplicants, setViewingApplicants] = useState(null)
 
     const queryClient = useQueryClient()
     const { addToast } = useNotification()
@@ -217,6 +319,22 @@ export default function JobBoard() {
                         onClose={() => setIsAdding(false)}
                         onSubmit={handleCreate}
                         isPending={createMutation.isPending}
+                    />
+                )}
+
+                {/* Matches Modal */}
+                {viewingMatches && (
+                    <MatchedTalentsModal
+                        jobId={viewingMatches}
+                        onClose={() => setViewingMatches(null)}
+                    />
+                )}
+
+                {/* Applicants Modal */}
+                {viewingApplicants && (
+                    <ApplicantsModal
+                        jobId={viewingApplicants}
+                        onClose={() => setViewingApplicants(null)}
                     />
                 )}
 
@@ -309,10 +427,18 @@ export default function JobBoard() {
                                         </p>
                                     </div>
 
-                                    <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
-                                        <span className="text-[10px] font-bold text-slate-500 uppercase">Status: Published</span>
-                                        <button className="text-xs text-emerald-500 font-bold hover:text-emerald-400">
-                                            View Applicants
+                                    <div className="pt-6 mt-6 border-t border-white/5 grid grid-cols-2 gap-4">
+                                        <button
+                                            onClick={() => setViewingApplicants(job.id)}
+                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500/10 transition-all font-bold text-xs"
+                                        >
+                                            <UserCheck size={14} /> View Applicants
+                                        </button>
+                                        <button
+                                            onClick={() => setViewingMatches(job.id)}
+                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all font-bold text-xs"
+                                        >
+                                            <Users size={14} /> View Matches
                                         </button>
                                     </div>
                                 </div>

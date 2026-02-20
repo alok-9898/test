@@ -162,6 +162,7 @@ class Match(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     requester_id = Column(String(36), ForeignKey("users.id"), nullable=False)
     target_id = Column(String(36), ForeignKey("users.id"), nullable=False)
+    job_id = Column(String(36), ForeignKey("job_postings.id"), nullable=True)
     match_score = Column(Float)
     status = Column(SQLEnum(MatchStatus), default=MatchStatus.PENDING)
     message = Column(Text)
@@ -169,3 +170,4 @@ class Match(Base):
     
     requester = relationship("User", foreign_keys=[requester_id], back_populates="sent_connections")
     target = relationship("User", foreign_keys=[target_id], back_populates="received_connections")
+    job = relationship("JobPosting")
