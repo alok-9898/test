@@ -1,7 +1,8 @@
 import client from './client'
 
 export const getTalentMatches = async (jobId = null) => {
-  const url = jobId ? `/matches/talent?job_id=${jobId}` : '/matches/talent'
+  const id = typeof jobId === 'object' ? null : jobId
+  const url = (id && id !== "[object Object]") ? `/matches/talent?job_id=${id}` : '/matches/talent'
   const response = await client.get(url)
   return response.data
 }
@@ -31,7 +32,12 @@ export const requestConnection = async (targetId, message, jobId = null) => {
 }
 
 export const getJobApplicants = async (jobId) => {
-  const response = await client.get(`/matches/jobs/${jobId}/applicants`)
+  const id = typeof jobId === 'object' ? null : jobId
+  if (!id || id === "[object Object]") {
+    console.warn("Invalid jobId passed to getJobApplicants:", jobId)
+    return []
+  }
+  const response = await client.get(`/matches/applicants/${id}`)
   return response.data
 }
 

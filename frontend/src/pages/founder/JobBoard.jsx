@@ -158,10 +158,14 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
 }
 
 function MatchedTalentsModal({ jobId, onClose }) {
+    const normalizedJobId = typeof jobId === 'object' ? null : String(jobId)
     const { data: matches = [], isLoading } = useQuery({
-        queryKey: ['jobMatches', jobId],
-        queryFn: () => getTalentMatches(jobId)
+        queryKey: ['jobMatches', normalizedJobId],
+        queryFn: () => getTalentMatches(normalizedJobId),
+        enabled: !!normalizedJobId && normalizedJobId !== "[object Object]"
     })
+
+    const filteredMatches = (matches || []).filter(m => m.match_percentage > 50)
 
     return (
         <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
@@ -179,11 +183,11 @@ function MatchedTalentsModal({ jobId, onClose }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-white/5 animate-pulse rounded-xl" />)}
                     </div>
-                ) : matches.length === 0 ? (
+                ) : filteredMatches.length === 0 ? (
                     <EmptyState icon={Users} title="No precise matches yet" message="Adjust the required skills to broaden your pipeline." />
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {matches.map(match => (
+                        {filteredMatches.map(match => (
                             <div key={match.talent_id} className="glass-card p-6 bg-white/5 border-white/5 hover:border-amber-500/30 transition-all flex items-start gap-4">
                                 <div className="flex-1">
                                     <h4 className="font-bold text-slate-100">{match.name}</h4>
@@ -207,9 +211,11 @@ function MatchedTalentsModal({ jobId, onClose }) {
 }
 
 function ApplicantsModal({ jobId, onClose }) {
+    const normalizedJobId = typeof jobId === 'object' ? null : String(jobId)
     const { data: applicants = [], isLoading } = useQuery({
-        queryKey: ['jobApplicants', jobId],
-        queryFn: () => getJobApplicants(jobId)
+        queryKey: ['jobApplicants', normalizedJobId],
+        queryFn: () => getJobApplicants(normalizedJobId),
+        enabled: !!normalizedJobId && normalizedJobId !== "[object Object]"
     })
 
     return (
@@ -308,7 +314,7 @@ export default function JobBoard() {
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-slate-100">Active Opportunities</h2>
                     <button onClick={() => setIsAdding(true)} className="premium-button btn-primary flex items-center gap-2 py-2 px-6">
-                        <Plus size={18} /> Post Reward
+                        <Plus size={18} /> Post Job
                     </button>
                 </div>
 
@@ -430,13 +436,13 @@ export default function JobBoard() {
                                     <div className="pt-6 mt-6 border-t border-white/5 grid grid-cols-2 gap-4">
                                         <button
                                             onClick={() => setViewingApplicants(job.id)}
-                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500/10 transition-all font-bold text-xs"
+                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all font-bold text-xs"
                                         >
                                             <UserCheck size={14} /> View Applicants
                                         </button>
                                         <button
                                             onClick={() => setViewingMatches(job.id)}
-                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all font-bold text-xs"
+                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500/10 transition-all font-bold text-xs"
                                         >
                                             <Users size={14} /> View Matches
                                         </button>

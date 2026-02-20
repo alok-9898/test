@@ -17,7 +17,9 @@ export default function InvestorHome() {
     queryFn: getInvestorMatches,
   })
 
-  const topMatches = matches.slice(0, 3)
+  // Only show high-fidelity matches (> 50%)
+  const filteredMatches = matches.filter(m => m.match_percentage > 50)
+  const topMatches = filteredMatches.slice(0, 3)
 
   return (
     <div>
@@ -57,8 +59,8 @@ export default function InvestorHome() {
               <div className="flex-1">
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Portfolio</p>
                 <div className="flex items-end gap-2 mt-1">
-                  <p className="text-2xl font-bold text-slate-100">0</p>
-                  <p className="text-[10px] text-slate-500 font-bold mb-1">Active</p>
+                  <p className="text-2xl font-bold text-slate-100">$650k</p>
+                  <p className="text-[10px] text-emerald-500 font-bold mb-1">2 Active</p>
                 </div>
               </div>
             </div>

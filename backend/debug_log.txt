@@ -1,0 +1,25 @@
+Total Users: 6
+Total Talent Profiles: 2
+
+--- Founder: founder@neplaunch.com ---
+  Startup Name: Test Startup
+  Startup Required Skills: None
+  Job Postings: 3
+    - Lead Backend Developer: None
+    - Lead Backend Developer: None
+    - Lead Backend Developer: None
+  Match with milan: 0.0%
+    - Talent Skills: [{'name': 'fast api', 'proficiency': 'Intermediate'}, {'name': 'mysql', 'proficiency': 'Intermediate'}, {'name': 'nodejs', 'proficiency': 'Intermediate'}]
+  Match with Alok Sharma: 0.0%
+    - Talent Skills: [{'name': 'fast api', 'proficiency': 'Intermediate'}, {'name': 'node js', 'proficiency': 'Intermediate'}, {'name': 'mysql', 'proficiency': 'Intermediate'}]
+
+--- Founder: bipin@gmail.com ---
+  Startup Name: dada group
+  Startup Required Skills: ['React']
+  Job Postings: 2
+    - Backend Developer: ['node js', 'fast api', 'mysql']
+    - web dev: ['javascript']
+  Match with milan: 0.0%
+    - Talent Skills: [{'name': 'fast api', 'proficiency': 'Intermediate'}, {'name': 'mysql', 'proficiency': 'Intermediate'}, {'name': 'nodejs', 'proficiency': 'Intermediate'}]
+  Match with Alok Sharma: 0.0%
+    - Talent Skills: [{'name': 'fast api', 'proficiency': 'Intermediate'}, {'name': 'node js', 'proficiency': 'Intermediate'}, {'name': 'mysql', 'proficiency': 'Intermediate'}]

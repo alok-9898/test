@@ -18,7 +18,9 @@ export default function FounderHome() {
     queryFn: getTalentMatches,
   })
 
-  const topMatches = talentMatches.slice(0, 3)
+  // Only show high-fidelity matches (> 50%)
+  const filteredMatches = talentMatches.filter(m => m.match_percentage > 50)
+  const topMatches = filteredMatches.slice(0, 3)
 
   return (
     <div>

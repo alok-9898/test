@@ -13,11 +13,13 @@ export default function TalentMatchList() {
     queryFn: getTalentMatches,
   })
 
-  const filteredMatches = (matches || []).filter(match =>
-    match.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    match.headline?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (match.matched_skills || []).some(s => s.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
+  const filteredMatches = (matches || [])
+    .filter(match => match.match_percentage > 50)
+    .filter(match =>
+      match.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      match.headline?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (match.matched_skills || []).some(s => s.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
 
   return (
     <div>

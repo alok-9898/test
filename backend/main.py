@@ -1,4 +1,4 @@
-"""Main FastAPI application."""
+"""Main FastAPI application.""" 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import init_db

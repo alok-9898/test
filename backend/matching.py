@@ -11,6 +11,21 @@ from datetime import datetime
 client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY) if settings.OPENAI_API_KEY else None
 
 
+def cosine_similarity(v1: List[float], v2: List[float]) -> float:
+    """Calculate cosine similarity between two vectors."""
+    if not v1 or not v2 or len(v1) != len(v2):
+        return 0.0
+    
+    dot_product = sum(a * b for a, b in zip(v1, v2))
+    magnitude_v1 = sum(a * a for a in v1) ** 0.5
+    magnitude_v2 = sum(a * a for a in v2) ** 0.5
+    
+    if magnitude_v1 == 0 or magnitude_v2 == 0:
+        return 0.0
+        
+    return dot_product / (magnitude_v1 * magnitude_v2)
+
+
 async def generate_embedding(text: str) -> List[float]:
     """Generate embedding using OpenAI text-embedding-3-small."""
     if not text or not client:
@@ -35,18 +50,18 @@ async def store_embedding(db: AsyncSession, user_id: str, embedding: List[float]
     # Check if embedding exists
     result = await db.execute(
         select(Embedding).where(
-            Embedding.user_id == UUID(user_id),
+            Embedding.user_id == user_id,
             Embedding.text_source == text_source
         )
     )
-    existing = result.scalar_one_or_none()
+    existing = result.scalars().first()
     
     if existing:
         existing.embedding = embedding
         existing.created_at = datetime.utcnow().isoformat()
     else:
         new_embedding = Embedding(
-            user_id=UUID(user_id),
+            user_id=user_id,
             embedding=embedding,
             text_source=text_source,
             created_at=datetime.utcnow().isoformat()
@@ -85,71 +100,72 @@ async def match_talent_to_startup(
     
     # Get talent profile
     talent_result = await db.execute(
-        select(TalentProfile).where(TalentProfile.user_id == UUID(talent_id))
+        select(TalentProfile).where(TalentProfile.user_id == talent_id)
     )
-    talent = talent_result.scalar_one_or_none()
+    talent = talent_result.scalars().first()
     
     # Get startup profile
     startup_result = await db.execute(
-        select(StartupProfile).where(StartupProfile.user_id == UUID(startup_id))
+        select(StartupProfile).where(StartupProfile.user_id == startup_id)
     )
-    startup = startup_result.scalar_one_or_none()
+    startup = startup_result.scalars().first()
     
     if not talent or not startup:
         return {"error": "Profile not found"}
     
     # Score A: Keyword Match (60%)
-    talent_skills = [s.get("name", "") for s in (talent.skills or [])]
+    talent_skills = []
+    for s in (talent.skills or []):
+        if isinstance(s, dict):
+            talent_skills.append(s.get("name", "").lower())
+        elif isinstance(s, str):
+            talent_skills.append(s.lower())
     
     # Use job-specific skills if job_id is provided, else use startup general skills
-    required_skills = startup.required_skills or []
+    required_skills = [s.lower() for s in (startup.required_skills or [])]
     if job_id:
         job_result = await db.execute(
-            select(JobPosting).where(JobPosting.id == UUID(job_id))
+            select(JobPosting).where(JobPosting.id == job_id)
         )
-        job = job_result.scalar_one_or_none()
+        job = job_result.scalars().first()
         if job:
-            required_skills = job.required_skills or []
+            required_skills = [s.lower() for s in (job.required_skills or [])]
 
     keyword_score = calculate_jaccard_similarity(talent_skills, required_skills)
+    print(f"DEBUG: Matching {talent.name} to {startup.name}")
+    print(f"DEBUG: Talent Skills: {talent_skills}")
+    print(f"DEBUG: Required Skills: {required_skills}")
+    print(f"DEBUG: Keyword Score: {keyword_score}")
     
     # Score B: Semantic Match (40%)
     # Get embeddings
     talent_embedding_result = await db.execute(
         select(Embedding).where(
-            Embedding.user_id == UUID(talent_id),
+            Embedding.user_id == talent_id,
             Embedding.text_source == "profile"
         )
     )
-    talent_embedding = talent_embedding_result.scalar_one_or_none()
+    talent_embedding = talent_embedding_result.scalars().first()
     
     startup_embedding_result = await db.execute(
         select(Embedding).where(
-            Embedding.user_id == UUID(startup_id),
+            Embedding.user_id == startup_id,
             Embedding.text_source == "profile"
         )
     )
-    startup_embedding = startup_embedding_result.scalar_one_or_none()
+    startup_embedding = startup_embedding_result.scalars().first()
     
-    semantic_score = 0.0
+    final_score = 0.0
+    # Final Score calculation
+    # If we have both embeddings, use hybrid scoring
     if talent_embedding and startup_embedding:
-        # Calculate cosine similarity using pgvector
-        cosine_query = text("""
-            SELECT 1 - (t.embedding <=> s.embedding) as similarity
-            FROM embeddings t, embeddings s
-            WHERE t.user_id = :talent_id AND t.text_source = 'profile'
-            AND s.user_id = :startup_id AND s.text_source = 'profile'
-        """)
-        result = await db.execute(
-            cosine_query,
-            {"talent_id": UUID(talent_id), "startup_id": UUID(startup_id)}
-        )
-        row = result.fetchone()
-        if row:
-            semantic_score = max(0.0, min(1.0, float(row[0])))
-    
-    # Final Score
-    final_score = (keyword_score * 0.6) + (semantic_score * 0.4)
+        v1 = talent_embedding.embedding
+        v2 = startup_embedding.embedding
+        if isinstance(v1, list) and isinstance(v2, list):
+            semantic_score = cosine_similarity(v1, v2)
+        final_score = (keyword_score * 0.6) + (semantic_score * 0.4)
+    else:
+        final_score = keyword_score
     
     # Determine matched and missing skills
     talent_skill_set = set(talent_skills)
@@ -179,27 +195,27 @@ async def match_startup_to_investor(
     
     # Get profiles
     startup_result = await db.execute(
-        select(StartupProfile).where(StartupProfile.user_id == UUID(startup_id))
+        select(StartupProfile).where(StartupProfile.user_id == startup_id)
     )
-    startup = startup_result.scalar_one_or_none()
+    startup = startup_result.scalars().first()
     
     investor_result = await db.execute(
-        select(InvestorProfile).where(InvestorProfile.user_id == UUID(investor_id))
+        select(InvestorProfile).where(InvestorProfile.user_id == investor_id)
     )
-    investor = investor_result.scalar_one_or_none()
+    investor = investor_result.scalars().first()
     
     if not startup or not investor:
         return {"error": "Profile not found"}
     
     # Score A: Keyword Match (60%)
     # Match industry to preferred sectors, stage to investment stage
-    startup_industry = [startup.industry] if startup.industry else []
-    preferred_sectors = investor.preferred_sectors or []
+    startup_industry = [startup.industry.lower()] if startup.industry else []
+    preferred_sectors = [s.lower() for s in (investor.preferred_sectors or [])]
     
     industry_match = calculate_jaccard_similarity(startup_industry, preferred_sectors)
     
-    startup_stage = [startup.stage.value] if startup.stage else []
-    investor_stages = investor.investment_stage or []
+    startup_stage = [startup.stage.value.lower()] if startup.stage else []
+    investor_stages = [s.lower() for s in (investor.investment_stage or [])]
     
     stage_match = calculate_jaccard_similarity(startup_stage, investor_stages)
     
@@ -208,38 +224,29 @@ async def match_startup_to_investor(
     # Score B: Semantic Match (40%)
     startup_embedding_result = await db.execute(
         select(Embedding).where(
-            Embedding.user_id == UUID(startup_id),
+            Embedding.user_id == startup_id,
             Embedding.text_source == "profile"
         )
     )
-    startup_embedding = startup_embedding_result.scalar_one_or_none()
+    startup_embedding = startup_embedding_result.scalars().first()
     
     investor_embedding_result = await db.execute(
         select(Embedding).where(
-            Embedding.user_id == UUID(investor_id),
+            Embedding.user_id == investor_id,
             Embedding.text_source == "thesis"
         )
     )
-    investor_embedding = investor_embedding_result.scalar_one_or_none()
+    investor_embedding = investor_embedding_result.scalars().first()
     
     semantic_score = 0.0
     if startup_embedding and investor_embedding:
-        cosine_query = text("""
-            SELECT 1 - (s.embedding <=> i.embedding) as similarity
-            FROM embeddings s, embeddings i
-            WHERE s.user_id = :startup_id AND s.text_source = 'profile'
-            AND i.user_id = :investor_id AND i.text_source = 'thesis'
-        """)
-        result = await db.execute(
-            cosine_query,
-            {"startup_id": UUID(startup_id), "investor_id": UUID(investor_id)}
-        )
-        row = result.fetchone()
-        if row:
-            semantic_score = max(0.0, min(1.0, float(row[0])))
-    
-    # Final Score
-    final_score = (keyword_score * 0.6) + (semantic_score * 0.4)
+        v1 = startup_embedding.embedding
+        v2 = investor_embedding.embedding
+        if isinstance(v1, list) and isinstance(v2, list):
+            semantic_score = cosine_similarity(v1, v2)
+        final_score = (keyword_score * 0.5) + (semantic_score * 0.5)
+    else:
+        final_score = keyword_score
     
     return {
         "user_id": str(investor.user_id),
