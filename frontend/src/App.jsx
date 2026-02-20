@@ -9,13 +9,13 @@ import TalentLayout from './pages/talent/TalentLayout'
 import InvestorLayout from './pages/investor/InvestorLayout'
 
 function App() {
-  const { token } = useAuth()
+  const { token, role } = useAuth()
 
   return (
     <Routes>
       <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <Login />} />
       <Route path="/register" element={token ? <Navigate to="/dashboard" /> : <Register />} />
-      
+
       <Route
         path="/dashboard"
         element={
@@ -27,10 +27,14 @@ function App() {
         <Route path="founder/*" element={<FounderLayout />} />
         <Route path="talent/*" element={<TalentLayout />} />
         <Route path="investor/*" element={<InvestorLayout />} />
-        <Route index element={<Navigate to="/dashboard/founder" replace />} />
+        <Route index element={
+          role === 'FOUNDER' ? <Navigate to="/dashboard/founder" replace /> :
+            role === 'INVESTOR' ? <Navigate to="/dashboard/investor" replace /> :
+              <Navigate to="/dashboard/talent" replace />
+        } />
       </Route>
-      
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+      <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }

@@ -58,6 +58,16 @@ async def get_db() -> AsyncSession:
 
 async def init_db():
     """Initialize database - create tables."""
-    async with engine.begin() as conn:
-        # Create all tables
-        await conn.run_sync(Base.metadata.create_all)
+    if settings.USE_MOCK_DATA:
+        return
+
+    print(f"🔄 Initializing database: {settings.DATABASE_URL}")
+    try:
+        async with engine.begin() as conn:
+            # Create all tables - SQLAlchemy handles checking if they exist
+            # but we wrap in try/except just in case of driver-specific issues
+            await conn.run_sync(Base.metadata.create_all)
+        print("✅ Database initialization complete (tables created or already exist).")
+    except Exception as e:
+        print(f"⚠️ Note: Database initialization encountered an issue: {e}")
+        print("Continuing startup anyway...")

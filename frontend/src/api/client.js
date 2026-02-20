@@ -30,7 +30,7 @@ client.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      window.location.href = '/login'
+      // Don't force redirect, let the application handle it via state/routes
     }
     return Promise.reject(error)
   }

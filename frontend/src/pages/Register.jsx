@@ -17,8 +17,8 @@ export default function Register() {
     setLoading(true)
     try {
       await register(email, password, role)
-      addToast('Registration successful', 'success')
-      navigate('/dashboard')
+      addToast('Registration successful. Please login.', 'success')
+      navigate('/login')
     } catch (error) {
       addToast(error.response?.data?.detail || 'Registration failed', 'error')
     } finally {
@@ -27,66 +27,70 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center mb-2">NepLaunch</h1>
-        <p className="text-center text-gray-600 mb-8">Join the startup ecosystem</p>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
+      <div className="max-w-md w-full glass-card p-10 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+
+        <h1 className="text-4xl font-bold text-center mb-2 gradient-text">Join NepLaunch</h1>
+        <p className="text-center text-slate-400 mb-10">Nepal's Premier Startup Ecosystem</p>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+            <label className="block text-sm font-medium text-slate-400 mb-2">
+              Email Address
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+              className="input-field"
               required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+            <label className="block text-sm font-medium text-slate-400 mb-2">
+              Create Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="input-field"
               required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              I am a...
+            <label className="block text-sm font-medium text-slate-400 mb-2">
+              Join as a...
             </label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
+              className="input-field"
             >
-              <option value="FOUNDER">Founder</option>
-              <option value="TALENT">Talent</option>
-              <option value="INVESTOR">Investor</option>
+              <option value="FOUNDER">Founder or Co-Founder</option>
+              <option value="TALENT">Skilled Talent / Freelancer</option>
+              <option value="INVESTOR">Angel / VC Investor</option>
             </select>
           </div>
-          
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-accent text-primary font-semibold py-2 rounded-lg hover:bg-accent-light transition-colors disabled:opacity-50"
+            className="w-full premium-button btn-primary mt-4"
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Creating Account...' : 'Register Now'}
           </button>
         </form>
-        
-        <p className="text-center mt-4 text-sm text-gray-600">
+
+        <p className="text-center mt-8 text-sm text-slate-400">
           Already have an account?{' '}
-          <Link to="/login" className="text-accent hover:underline">
-            Login
+          <Link to="/login" className="text-amber-500 hover:text-amber-400 font-medium transition-colors">
+            Sign In
           </Link>
         </p>
       </div>

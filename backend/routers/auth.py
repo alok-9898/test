@@ -66,6 +66,32 @@ async def register(user_data: UserRegister, db: AsyncSession = Depends(get_db)):
     await db.commit()
     await db.refresh(new_user)
     
+    # Create appropriate profile record based on role
+    from models import TalentProfile, StartupProfile, InvestorProfile
+    if user_data.role == UserRole.TALENT:
+        new_profile = TalentProfile(
+            user_id=new_user.id,
+            name="New Talent",
+            updated_at=datetime.utcnow().isoformat()
+        )
+        db.add(new_profile)
+    elif user_data.role == UserRole.FOUNDER:
+        new_profile = StartupProfile(
+            user_id=new_user.id,
+            name="New Startup",
+            updated_at=datetime.utcnow().isoformat()
+        )
+        db.add(new_profile)
+    elif user_data.role == UserRole.INVESTOR:
+        new_profile = InvestorProfile(
+            user_id=new_user.id,
+            name="New Investor",
+            updated_at=datetime.utcnow().isoformat()
+        )
+        db.add(new_profile)
+    
+    await db.commit()
+    
     # Create token
     access_token = create_access_token(data={"sub": str(new_user.id), "role": user_data.role.value})
     

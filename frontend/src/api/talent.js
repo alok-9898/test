@@ -1,9 +1,11 @@
-import { MOCK_TALENT_PROFILE } from '../mockData'
+import client from './client'
 
 export const getTalentProfile = async () => {
-  return MOCK_TALENT_PROFILE
+  const response = await client.get('/talent/profile')
+  return response.data
 }
 
 export const updateTalentProfile = async (data) => {
-  return { message: 'Profile updated', completeness_score: 90.0 }
+  const response = await client.patch('/talent/profile', data)
+  return response.data
 }

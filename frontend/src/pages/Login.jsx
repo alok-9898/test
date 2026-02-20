@@ -20,59 +20,62 @@ export default function Login() {
       addToast('Login successful', 'success')
       navigate('/dashboard')
     } catch (error) {
-      addToast('Login successful', 'success')
-      navigate('/dashboard')
+      addToast(error.response?.data?.detail || 'Login failed', 'error')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center mb-2">NepLaunch</h1>
-        <p className="text-center text-gray-600 mb-8">Startup Marketplace for Nepal</p>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
+      <div className="max-w-md w-full glass-card p-10 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+
+        <h1 className="text-4xl font-bold text-center mb-2 gradient-text">NepLaunch</h1>
+        <p className="text-center text-slate-400 mb-10">Startup Marketplace for Nepal</p>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+            <label className="block text-sm font-medium text-slate-400 mb-2">
+              Email Address
             </label>
             <input
-              type="text"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter any email"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
+              placeholder="name@example.com"
+              className="input-field"
+              required
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-400 mb-2">
               Password
             </label>
             <input
-              type="text"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter any password"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
+              placeholder="••••••••"
+              className="input-field"
+              required
             />
           </div>
-          
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-accent text-primary font-semibold py-2 rounded-lg hover:bg-accent-light transition-colors disabled:opacity-50"
+            className="w-full premium-button btn-primary mt-4"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
-        
-        <p className="text-center mt-4 text-sm text-gray-600">
+
+        <p className="text-center mt-8 text-sm text-slate-400">
           Don't have an account?{' '}
-          <Link to="/register" className="text-accent hover:underline">
-            Register
+          <Link to="/register" className="text-amber-500 hover:text-amber-400 font-medium transition-colors">
+            Create account
           </Link>
         </p>
       </div>
