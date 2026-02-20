@@ -55,43 +55,43 @@ export default function InvestorMatchList() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {filteredMatches.map((match) => (
-              <div key={match.investor_id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full bg-slate-900/40">
+              <div key={match.investor_id} className="glass-card group hover:border-[var(--accent)]/30 transition-all p-8 flex flex-col h-full bg-white">
                 <div className="flex items-start justify-between mb-6">
-                  <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center font-bold text-amber-500 text-2xl border border-white/5 shadow-inner uppercase">
+                  <div className="w-16 h-16 bg-[var(--elevated)] rounded-2xl flex items-center justify-center font-black text-[var(--accent)] text-2xl border border-[var(--border)] shadow-inner uppercase">
                     {match.name?.[0]}
                   </div>
                   <MatchScoreRing score={match.match_percentage} size={50} />
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight mb-2">
+                <h3 className="text-xl font-extrabold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors uppercase tracking-tight mb-1">
                   {match.name}
                 </h3>
-                <p className="text-sm font-medium text-amber-500/80 mt-1 uppercase tracking-widest text-[10px]">
+                <p className="text-xs font-black text-[var(--accent)] mt-1 uppercase tracking-widest">
                   {match.fund || match.type}
                 </p>
 
                 <div className="flex-1 mt-6 space-y-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Thesis Alignment</h4>
-                      <p className="text-xs text-slate-300">{(match.score_breakdown?.semantic * 100).toFixed(0)}% Semantic Match</p>
+                      <h4 className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest mb-1">Thesis Alignment</h4>
+                      <p className="text-xs text-[var(--text-primary)] font-bold">{(match.score_breakdown?.semantic * 100).toFixed(0)}% Semantic Match</p>
                     </div>
                     <div>
-                      <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Check Size</h4>
-                      <div className="flex items-center gap-1 text-emerald-500">
+                      <h4 className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest mb-1">Check Size</h4>
+                      <div className="flex items-center gap-1 text-[var(--success)]">
                         <DollarSign size={12} />
-                        <span className="text-xs font-bold">Matched Mandate</span>
+                        <span className="text-xs font-black">Matched Mandate</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-8 mt-8 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-8 mt-8 border-t border-[var(--border)] flex items-center justify-between">
                   <div className="flex gap-3">
-                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                    <button className="p-2 rounded-lg bg-[var(--elevated)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all">
                       <Mail size={16} />
                     </button>
-                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                    <button className="p-2 rounded-lg bg-[var(--elevated)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all">
                       <LinkIcon size={16} />
                     </button>
                   </div>

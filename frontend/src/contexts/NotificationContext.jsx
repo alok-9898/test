@@ -9,11 +9,11 @@ export function NotificationProvider({ children }) {
     const id = Date.now()
     const notification = { id, message, type }
     setNotifications((prev) => [...prev, notification])
-    
+
     setTimeout(() => {
       setNotifications((prev) => prev.filter((n) => n.id !== id))
     }, 5000)
-    
+
     return id
   }
 
@@ -28,13 +28,12 @@ export function NotificationProvider({ children }) {
         {notifications.map((notification) => (
           <div
             key={notification.id}
-            className={`px-4 py-3 rounded-lg shadow-lg ${
-              notification.type === 'success'
-                ? 'bg-green-500 text-white'
+            className={`px-5 py-3 rounded-xl shadow-xl border-l-[4px] font-extrabold text-sm flex items-center gap-3 backdrop-blur-md transition-all animate-in slide-in-from-right fade-in duration-300 ${notification.type === 'success'
+                ? 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]'
                 : notification.type === 'error'
-                ? 'bg-red-500 text-white'
-                : 'bg-blue-500 text-white'
-            }`}
+                  ? 'bg-red-50 text-[#DC2626] border-[#DC2626]'
+                  : 'bg-[#EEF5FF] text-[#1B4FD8] border-[#1B4FD8]'
+              }`}
           >
             {notification.message}
           </div>

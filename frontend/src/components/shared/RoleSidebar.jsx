@@ -32,18 +32,18 @@ export default function RoleSidebar({ role, onLogout }) {
   const links = role === 'FOUNDER' ? founderLinks : role === 'TALENT' ? talentLinks : investorLinks
 
   return (
-    <aside className="w-72 bg-slate-950 border-r border-white/5 flex flex-col h-screen overflow-hidden">
+    <aside className="w-72 bg-white border-r-[1.5px] border-[var(--border)] flex flex-col h-screen overflow-hidden">
       <div className="p-8 mb-4">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-600 rounded-lg flex items-center justify-center text-slate-950">
+          <div className="w-8 h-8 bg-[#0C2D6B] rounded-lg flex items-center justify-center text-white">
             <TrendingUp size={18} strokeWidth={3} />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight gradient-text">NepLaunch</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-[#0C2D6B]">NepLaunch</h1>
         </div>
-        <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">{role} PORTAL</p>
+        <p className="text-[11px] text-[var(--text-secondary)] uppercase tracking-[0.1em] font-extrabold">{role} PORTAL</p>
       </div>
 
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
         {links.map((link) => {
           const Icon = link.icon
           return (
@@ -52,19 +52,16 @@ export default function RoleSidebar({ role, onLogout }) {
               to={link.to}
               end={link.end}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
-                  ? 'bg-amber-500/10 text-amber-500 shadow-[inset_0_0_20px_rgba(245,158,11,0.05)]'
-                  : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${isActive
+                  ? 'bg-[#EEF5FF] text-[#1B4FD8] border-l-[3px] border-[#1B4FD8] rounded-none'
+                  : 'text-[var(--text-secondary)] hover:bg-[#F8F7F4] hover:text-[var(--text-primary)]'
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={20} className="transition-transform duration-200 group-hover:scale-110" />
-                  <span className="font-medium">{link.label}</span>
-                  {isActive && (
-                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_10px_#f59e0b]"></div>
-                  )}
+                  <Icon size={20} className={`transition-transform duration-200 group-hover:scale-110 ${isActive ? 'text-[#1B4FD8]' : ''}`} />
+                  <span className="font-bold">{link.label}</span>
                 </>
               )}
             </NavLink>
@@ -72,23 +69,23 @@ export default function RoleSidebar({ role, onLogout }) {
         })}
       </nav>
 
-      <div className="p-4 mt-auto">
-        <div className="glass-card mb-4 p-4 flex items-center gap-3 bg-white/5 border-white/5">
-          <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-white/10 uppercase">
+      <div className="p-4 mt-auto border-t border-[var(--border)]">
+        <div className="glass-card mb-4 p-4 flex items-center gap-3 bg-[#F8F7F4] border-[var(--border)] shadow-none hover:translate-y-0">
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[var(--text-secondary)] border border-[var(--border)] uppercase font-bold text-xs">
             {currentUser?.email?.[0] || 'U'}
           </div>
           <div className="overflow-hidden">
-            <p className="text-sm font-medium text-slate-200 truncate">{currentUser?.email}</p>
-            <p className="text-xs text-slate-500 capitalize">{role?.toLowerCase() || 'User'}</p>
+            <p className="text-sm font-extrabold text-[var(--text-primary)] truncate">{currentUser?.email}</p>
+            <p className="text-[11px] text-[var(--text-secondary)] capitalize font-bold">{role?.toLowerCase() || 'User'}</p>
           </div>
         </div>
 
         <button
           onClick={onLogout}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 w-full transition-colors group"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--text-secondary)] hover:bg-red-50 hover:text-red-600 w-full transition-colors group font-bold"
         >
           <LogOut size={20} className="group-hover:translate-x-0.5 transition-transform" />
-          <span className="font-medium">Logout</span>
+          <span>Logout</span>
         </button>
       </div>
     </aside>

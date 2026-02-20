@@ -31,13 +31,13 @@ export default function MyMatchesView() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {matches.map((match) => (
-              <div key={match.startup_id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full bg-slate-900/50">
+              <div key={match.startup_id} className="glass-card group hover:border-[#1B4FD8]/30 transition-all p-8 flex flex-col h-full bg-white">
                 <div className="flex items-start justify-between mb-8">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight">
+                    <h3 className="text-2xl font-extrabold text-[#0C2D6B] group-hover:text-[#1B4FD8] transition-colors uppercase tracking-tight">
                       {match.name}
                     </h3>
-                    <p className="text-slate-400 mt-2 text-sm leading-relaxed">
+                    <p className="text-[var(--text-secondary)] font-semibold mt-2 text-sm leading-relaxed">
                       {match.tagline}
                     </p>
                   </div>
@@ -46,34 +46,34 @@ export default function MyMatchesView() {
 
                 <div className="space-y-6 mb-8 flex-1">
                   <div>
-                    <h4 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-3">Alignment Breakdown</h4>
+                    <h4 className="text-[10px] font-extrabold text-[#1B4FD8] uppercase tracking-widest mb-3">Alignment Breakdown</h4>
                     <div className="flex flex-wrap gap-2">
                       {match.matched_skills?.map((skill) => (
-                        <div key={skill} className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase">
+                        <div key={skill} className="px-3 py-1 rounded-full bg-[#F0FDF4] border border-[#16A34A]/10 text-[#16A34A] text-[10px] font-extrabold uppercase">
                           {skill}
                         </div>
                       ))}
                       {match.missing_skills?.map((skill) => (
-                        <div key={skill} className="px-3 py-1 rounded-full bg-slate-800 border border-white/5 text-slate-500 text-[10px] font-bold uppercase strike-through">
+                        <div key={skill} className="px-3 py-1 rounded-full bg-[#F8F7F4] border border-[var(--border)] text-[var(--text-muted)] text-[10px] font-extrabold uppercase line-through opacity-70">
                           {skill}
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[var(--border)]">
                     <div>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase">Skill Match</p>
-                      <p className="text-slate-200 font-mono text-sm mt-1">{(match.score_breakdown?.skills * 10).toFixed(1)}/10</p>
+                      <p className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase">Skill Match</p>
+                      <p className="text-[var(--text-primary)] font-extrabold text-sm mt-1">{(match.score_breakdown?.skills * 10).toFixed(1)}/10</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase">Vision Alignment</p>
-                      <p className="text-slate-200 font-mono text-sm mt-1">{(match.score_breakdown?.semantic * 10).toFixed(1)}/10</p>
+                      <p className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase">Vision Alignment</p>
+                      <p className="text-[var(--text-primary)] font-extrabold text-sm mt-1">{(match.score_breakdown?.semantic * 10).toFixed(1)}/10</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-white/5">
+                <div className="pt-6 border-t border-[var(--border)]">
                   <ConnectionButton targetId={match.startup_id} targetRole="FOUNDER" className="w-full" />
                 </div>
               </div>

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: neplaunch-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: alok
+      MYSQL_DATABASE: launchnepal
+      MYSQL_USER: root
+      MYSQL_PASSWORD: alok
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: neplaunch-backend
+    restart: always
+    environment:
+      - DATABASE_URL=mysql+aiomysql://root:alok@db:3306/launchnepal
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=alok
+      - DB_NAME=launchnepal
+      - USE_MOCK_DATA=False
+      - SECRET_KEY=09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: neplaunch-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

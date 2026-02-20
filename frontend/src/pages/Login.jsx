@@ -27,16 +27,16 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
-      <div className="max-w-md w-full glass-card p-10 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+    <div className="min-h-screen flex items-center justify-center bg-[var(--primary)] p-4">
+      <div className="max-w-md w-full glass-card p-10 relative overflow-hidden bg-white">
+        <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)]"></div>
 
-        <h1 className="text-4xl font-bold text-center mb-2 gradient-text">NepLaunch</h1>
-        <p className="text-center text-slate-400 mb-10">Startup Marketplace for Nepal</p>
+        <h1 className="text-4xl font-extrabold text-center mb-2 text-[#0C2D6B]">NepLaunch</h1>
+        <p className="text-center text-[var(--text-secondary)] font-semibold mb-10">Startup Marketplace for Nepal</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
+            <label className="block text-sm font-extrabold text-[#0C2D6B] mb-2 uppercase tracking-wide">
               Email Address
             </label>
             <input
@@ -50,7 +50,7 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
+            <label className="block text-sm font-extrabold text-[#0C2D6B] mb-2 uppercase tracking-wide">
               Password
             </label>
             <input
@@ -72,9 +72,9 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="text-center mt-8 text-sm text-slate-400">
+        <p className="text-center mt-8 text-sm text-[var(--text-secondary)] font-semibold">
           Don't have an account?{' '}
-          <Link to="/register" className="text-amber-500 hover:text-amber-400 font-medium transition-colors">
+          <Link to="/register" className="text-[var(--accent)] hover:text-[var(--accent-hover)] font-extrabold transition-colors">
             Create account
           </Link>
         </p>

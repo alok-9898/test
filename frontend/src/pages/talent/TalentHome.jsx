@@ -28,7 +28,7 @@ export default function TalentHome() {
 
       <div className="p-8 space-y-8 max-w-7xl mx-auto">
         {profile?.completeness_score < 80 && (
-          <div className="glass-card bg-amber-500/5 border-amber-500/20 p-6">
+          <div className="glass-card bg-amber-50 border-amber-200 p-6 shadow-sm">
             <ProfileCompleteness
               score={profile.completeness_score || 0}
               missingFields={[]}
@@ -37,52 +37,52 @@ export default function TalentHome() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="glass-card p-6 group hover:border-amber-500/30 transition-all duration-300">
+          <div className="glass-card p-6 group hover:border-[#1B4FD8]/30 transition-all duration-300 bg-white">
             <div className="flex items-center gap-4">
-              <div className="p-4 bg-amber-500/10 rounded-2xl group-hover:bg-amber-500/20 transition-colors">
-                <User className="text-amber-500" size={28} />
+              <div className="p-4 bg-[#EEF5FF] rounded-2xl group-hover:bg-[#1B4FD8]/10 transition-colors">
+                <User className="text-[#1B4FD8]" size={28} />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-400">Profile Readiness</p>
-                <p className="text-2xl font-bold text-slate-100">{Math.round(profile?.completeness_score || 0)}%</p>
+                <p className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase tracking-[0.1em]">Profile Readiness</p>
+                <p className="text-2xl font-extrabold text-[var(--text-primary)]">{Math.round(profile?.completeness_score || 0)}%</p>
               </div>
             </div>
           </div>
 
-          <div className="glass-card p-6 group hover:border-amber-500/30 transition-all duration-300">
+          <div className="glass-card p-6 group hover:border-[#16A34A]/30 transition-all duration-300 bg-white">
             <div className="flex items-center gap-4">
-              <div className="p-4 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500/20 transition-colors">
-                <Briefcase className="text-emerald-500" size={28} />
+              <div className="p-4 bg-[#F0FDF4] rounded-2xl group-hover:bg-[#16A34A]/10 transition-colors">
+                <Briefcase className="text-[#16A34A]" size={28} />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-400">Applications</p>
-                <p className="text-2xl font-bold text-slate-100">0</p>
+                <p className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase tracking-[0.1em]">Applications</p>
+                <p className="text-2xl font-extrabold text-[var(--text-primary)]">0</p>
               </div>
             </div>
           </div>
 
-          <div className="glass-card p-6 group hover:border-amber-500/30 transition-all duration-300">
+          <div className="glass-card p-6 group hover:border-[#1B4FD8]/30 transition-all duration-300 bg-white">
             <div className="flex items-center gap-4">
-              <div className="p-4 bg-purple-500/10 rounded-2xl group-hover:bg-purple-500/20 transition-colors">
-                <Users className="text-purple-500" size={28} />
+              <div className="p-4 bg-[#EEF5FF] rounded-2xl group-hover:bg-[#1B4FD8]/10 transition-colors">
+                <Users className="text-[#1B4FD8]" size={28} />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-400">Opportunities</p>
-                <p className="text-2xl font-bold text-slate-100">{startupMatches.length}</p>
+                <p className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase tracking-[0.1em]">Opportunities</p>
+                <p className="text-2xl font-extrabold text-[var(--text-primary)]">{startupMatches.length}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="glass-card p-8">
+        <div className="glass-card p-8 bg-white">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-slate-100">Top Venture Matches</h2>
-              <p className="text-sm text-slate-400 mt-1">Based on your shared skills and preferences</p>
+              <h2 className="text-2xl font-extrabold text-[#0C2D6B]">Top Venture Matches</h2>
+              <p className="text-sm text-[var(--text-secondary)] font-semibold mt-1">Based on your shared skills and preferences</p>
             </div>
             <Link
               to="/dashboard/talent/matches"
-              className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium hover:bg-white/10 transition-colors"
+              className="px-6 py-2 rounded-full bg-white border border-[var(--border)] text-[11px] font-extrabold uppercase tracking-widest hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all text-[var(--text-secondary)]"
             >
               Explore All
             </Link>
@@ -91,18 +91,18 @@ export default function TalentHome() {
           {topMatches.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {topMatches.map((match) => (
-                <div key={match.startup_id} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
+                <div key={match.startup_id} className="p-6 rounded-2xl bg-[#F8F7F4] border border-[var(--border)] hover:border-[#1B4FD8]/30 transition-all group">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center font-bold text-amber-500 text-xl overflow-hidden shadow-inner">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center font-extrabold text-[#1B4FD8] text-xl overflow-hidden shadow-inner border border-[var(--border)]">
                       {match.name?.[0]}
                     </div>
                     <MatchScoreRing score={match.match_percentage} />
                   </div>
-                  <h3 className="font-bold text-lg text-slate-100 mb-1 group-hover:text-amber-500 transition-colors">{match.name}</h3>
-                  <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">{match.tagline}</p>
-                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-xs font-semibold px-2 py-1 bg-amber-500/10 text-amber-500 rounded-md">High Potential</span>
-                    <span className="text-xs text-slate-500">2h ago</span>
+                  <h3 className="font-extrabold text-lg text-[var(--text-primary)] mb-1 group-hover:text-[#1B4FD8] transition-colors">{match.name}</h3>
+                  <p className="text-sm text-[var(--text-secondary)] font-semibold line-clamp-2 leading-relaxed">{match.tagline}</p>
+                  <div className="mt-6 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold px-2 py-1 bg-[#F0FDF4] text-[#16A34A] rounded-full uppercase">High Potential</span>
+                    <span className="text-[10px] text-[var(--text-muted)] font-bold">2h ago</span>
                   </div>
                 </div>
               ))}

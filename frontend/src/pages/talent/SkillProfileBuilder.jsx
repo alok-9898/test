@@ -98,23 +98,21 @@ export default function SkillProfileBuilder() {
 
       <div className="p-8 space-y-8 max-w-7xl mx-auto">
         {profile && (
-          <div className="glass-card bg-amber-500/5 border-amber-500/20 p-6">
-            <ProfileCompleteness
-              score={profile.completeness_score || 0}
-              missingFields={[]}
-            />
-          </div>
+          <ProfileCompleteness
+            score={profile.completeness_score || 0}
+            missingFields={[]}
+          />
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Form */}
           <div className="lg:col-span-2 space-y-8">
-            <form onSubmit={handleSubmit} className="glass-card p-8 space-y-8">
+            <form onSubmit={handleSubmit} className="glass-card p-8 space-y-8 bg-white">
               <section>
-                <h3 className="text-xl font-semibold mb-6 gradient-text">Professional Identity</h3>
+                <h3 className="text-xl font-extrabold mb-6 text-[#0C2D6B] tracking-tight">Professional Identity</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">Full Name</label>
+                    <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Full Name</label>
                     <input
                       type="text"
                       value={formData.name}
@@ -123,21 +121,21 @@ export default function SkillProfileBuilder() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">Email Address</label>
+                    <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Email Address</label>
                     <div className="relative">
-                      <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                      <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                       <input
                         type="email"
                         value={currentUser?.email || ''}
                         readOnly
-                        className="input-field pl-9 text-slate-500 cursor-not-allowed bg-white/[0.02]"
+                        className="input-field pl-9 text-[var(--text-muted)] cursor-not-allowed bg-[#F8F7F4]"
                         title="Email cannot be changed"
                       />
                     </div>
-                    <p className="text-[10px] text-slate-600 mt-1">Account email — cannot be changed</p>
+                    <p className="text-[10px] text-[var(--text-muted)] mt-1 font-bold">Account email — cannot be changed</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">Headline</label>
+                    <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Headline</label>
                     <input
                       type="text"
                       value={formData.headline}
@@ -147,7 +145,7 @@ export default function SkillProfileBuilder() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">Location</label>
+                    <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Location</label>
                     <input
                       type="text"
                       value={formData.location}
@@ -156,7 +154,7 @@ export default function SkillProfileBuilder() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">Experience Level</label>
+                    <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Experience Level</label>
                     <select
                       value={formData.experience_level}
                       onChange={(e) => setFormData({ ...formData, experience_level: e.target.value })}
@@ -171,7 +169,7 @@ export default function SkillProfileBuilder() {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Professional Bio</label>
+                  <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Professional Bio</label>
                   <textarea
                     value={formData.bio}
                     onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
@@ -192,17 +190,17 @@ export default function SkillProfileBuilder() {
               </div>
             </form>
 
-            <section className="glass-card p-8">
-              <h3 className="text-xl font-semibold mb-6 gradient-text">Documents & Assets</h3>
-              <div className="flex flex-col md:flex-row gap-6 items-center border-2 border-dashed border-white/5 rounded-2xl p-8 bg-white/[0.02]">
-                <div className="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500">
+            <section className="glass-card p-8 bg-white">
+              <h3 className="text-xl font-extrabold mb-6 text-[#0C2D6B] tracking-tight">Documents & Assets</h3>
+              <div className="flex flex-col md:flex-row gap-6 items-center border-[1.5px] border-dashed border-[var(--border)] rounded-2xl p-8 bg-[#F8F7F4]">
+                <div className="w-16 h-16 bg-[#EEF5FF] rounded-2xl flex items-center justify-center text-[#1B4FD8] border border-[#1B4FD8]/10 shadow-inner">
                   <FileText size={32} />
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h4 className="font-bold text-slate-100">Upload Professional CV</h4>
-                  <p className="text-sm text-slate-400 mt-1">PDF, DOCX up to 5MB. This helps founders find you.</p>
+                  <h4 className="font-extrabold text-[#0C2D6B] uppercase tracking-tight">Upload Professional CV</h4>
+                  <p className="text-sm text-[var(--text-secondary)] font-semibold mt-1">PDF, DOCX up to 5MB. This helps founders find you.</p>
                   {profile?.cv_path && (
-                    <p className="text-xs text-emerald-500 mt-2 font-medium">✓ Currently: {profile.cv_path.split('/').pop()}</p>
+                    <p className="text-xs text-[#16A34A] mt-2 font-extrabold uppercase">✓ Currently: {profile.cv_path.split('/').pop()}</p>
                   )}
                 </div>
                 <label className="cursor-pointer">
@@ -217,8 +215,8 @@ export default function SkillProfileBuilder() {
 
           {/* Right Column: Skills UI */}
           <div className="space-y-8">
-            <section className="glass-card p-8">
-              <h3 className="text-xl font-semibold mb-6 gradient-text">Core Skills</h3>
+            <section className="glass-card p-8 bg-white">
+              <h3 className="text-xl font-extrabold mb-6 text-[#0C2D6B] tracking-tight text-center uppercase">Core Skills</h3>
               <div className="space-y-4">
                 <div className="flex gap-2">
                   <input
@@ -247,33 +245,33 @@ export default function SkillProfileBuilder() {
                   </button>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-4">
+                <div className="flex flex-wrap gap-2 pt-4 justify-center">
                   {skills.length > 0 ? skills.map((skill, idx) => (
-                    <div key={idx} className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-amber-500/50 transition-all">
-                      <span className="text-sm font-medium text-slate-200">{skill.name}</span>
+                    <div key={idx} className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EEF5FF] border border-[#1B4FD8]/10 hover:border-[#1B4FD8]/30 transition-all shadow-sm">
+                      <span className="text-xs font-extrabold text-[#1B4FD8]">{skill.name}</span>
                       <button
                         type="button"
                         onClick={() => removeSkill(idx)}
-                        className="w-4 h-4 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-red-500 hover:text-white transition-colors text-[10px]"
+                        className="w-4 h-4 flex items-center justify-center rounded-full bg-white text-[var(--text-muted)] hover:bg-[#DC2626] hover:text-white transition-colors text-[10px] shadow-sm border border-[#1B4FD8]/10"
                       >
                         ✕
                       </button>
                     </div>
                   )) : (
-                    <p className="text-sm text-slate-500 italic py-4">No skills added yet. Add your core expertise.</p>
+                    <p className="text-sm text-[var(--text-muted)] font-semibold italic py-4">No skills added yet. Add your core expertise.</p>
                   )}
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/5">
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Quick Add</h4>
-                <div className="flex flex-wrap gap-2">
+              <div className="mt-8 pt-6 border-t border-[var(--border)]">
+                <h4 className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-widest mb-4 text-center">Quick Add</h4>
+                <div className="flex flex-wrap gap-2 justify-center">
                   {['Product Design', 'React', 'Python', 'Sales', 'Marketing', 'SQL'].map(s => (
                     <button
                       key={s}
                       type="button"
                       onClick={() => addSkill(s)}
-                      className="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-400 hover:bg-slate-700 transition-colors uppercase"
+                      className="text-[10px] font-extrabold px-3 py-1.5 rounded-full bg-[#F8F7F4] text-[var(--text-secondary)] border border-[var(--border)] hover:bg-[#EEF5FF] hover:text-[#1B4FD8] hover:border-[#1B4FD8]/20 transition-all uppercase"
                     >
                       + {s}
                     </button>

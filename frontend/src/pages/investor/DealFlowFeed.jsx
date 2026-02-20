@@ -30,20 +30,20 @@ export default function DealFlowFeed() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {startups.map((startup) => (
-              <div key={startup.investor_id || startup.startup_id} className="glass-card p-6 group hover:border-amber-500/30 transition-all bg-slate-900/40">
+              <div key={startup.investor_id || startup.startup_id} className="glass-card p-6 group hover:border-[#1B4FD8]/30 transition-all bg-white">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-lg font-bold text-slate-100 uppercase tracking-tight">{startup.name}</h3>
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">{startup.fund || startup.industry || startup.type}</p>
+                    <h3 className="text-lg font-extrabold text-[#0C2D6B] uppercase tracking-tight">{startup.name}</h3>
+                    <p className="text-[10px] text-[var(--text-secondary)] font-extrabold uppercase tracking-widest mt-1">{startup.fund || startup.industry || startup.type}</p>
                   </div>
                   <MatchScoreRing score={startup.match_percentage} size={50} />
                 </div>
 
-                <div className="mb-6 p-3 bg-white/5 rounded-lg border border-white/5">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Signal Decomposition</p>
-                  <p className="text-[10px] text-slate-400 mt-1 font-mono">
-                    Industry/Stage: <span className="text-amber-500/80">{(startup.score_breakdown?.industry_stage || 0).toFixed(2)}</span> |
-                    Semantic: <span className="text-amber-500/80">{(startup.score_breakdown?.semantic || 0).toFixed(2)}</span>
+                <div className="mb-6 p-3 bg-[#F8F7F4] rounded-lg border border-[var(--border)]">
+                  <p className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase tracking-widest">Signal Decomposition</p>
+                  <p className="text-[10px] text-[var(--text-muted)] mt-1 font-bold">
+                    Industry/Stage: <span className="text-[#1B4FD8]">{(startup.score_breakdown?.industry_stage || 0).toFixed(2)}</span> |
+                    Semantic: <span className="text-[#1B4FD8]">{(startup.score_breakdown?.semantic || 0).toFixed(2)}</span>
                   </p>
                 </div>
 

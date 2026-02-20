@@ -57,16 +57,16 @@ export default function DiasporaNetwork() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredInvestors.map((inv) => (
-              <div key={inv.id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full">
+              <div key={inv.id} className="glass-card group hover:border-[var(--accent)]/30 transition-all p-8 flex flex-col h-full bg-white">
                 <div className="flex items-start gap-4 mb-6">
-                  <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center font-bold text-amber-500 text-2xl border border-white/5 shadow-inner uppercase">
+                  <div className="w-16 h-16 bg-[var(--elevated)] rounded-2xl flex items-center justify-center font-black text-[var(--accent)] text-2xl border border-[var(--border)] shadow-inner uppercase">
                     {inv.name?.[0]}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight">
+                    <h3 className="text-xl font-extrabold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors uppercase tracking-tight">
                       {inv.name}
                     </h3>
-                    <p className="text-sm font-medium text-amber-500/80 mt-1 uppercase tracking-widest text-[10px]">
+                    <p className="text-xs font-black text-[var(--accent)] mt-1 uppercase tracking-widest leading-none">
                       {inv.fund} • {inv.type}
                     </p>
                   </div>
@@ -74,27 +74,27 @@ export default function DiasporaNetwork() {
 
                 <div className="flex-1 space-y-4">
                   <div>
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Focus Sectors</h4>
+                    <h4 className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest mb-2">Focus Sectors</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {(inv.preferred_sectors || []).map(s => (
-                        <span key={s} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[10px] text-slate-300 font-medium">
+                        <span key={s} className="px-2 py-0.5 rounded-md bg-[var(--elevated)] border border-[var(--border)] text-[10px] text-[var(--text-primary)] font-bold">
                           {s}
                         </span>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Mandate</h4>
-                    <p className="text-xs text-slate-400">{inv.geography_focus}</p>
+                    <h4 className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest mb-2">Mandate</h4>
+                    <p className="text-xs text-[var(--text-primary)] font-bold">{inv.geography_focus}</p>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-6 mt-6 border-t border-[var(--border)] flex items-center justify-between">
                   <div className="flex gap-3">
-                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                    <button className="p-2 rounded-lg bg-[var(--elevated)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all">
                       <Mail size={16} />
                     </button>
-                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                    <button className="p-2 rounded-lg bg-[var(--elevated)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all">
                       <Link size={16} />
                     </button>
                   </div>

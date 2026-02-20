@@ -37,18 +37,18 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
     const handleSubmit = (e) => { e.preventDefault(); onSubmit(form) }
 
     return (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="glass-card w-full max-w-2xl p-8 space-y-6 relative bg-slate-900 max-h-[90vh] overflow-y-auto">
-                <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-slate-100">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="glass-card w-full max-w-2xl p-8 space-y-6 relative bg-white max-h-[90vh] overflow-y-auto border-[var(--border)] shadow-2xl">
+                <button onClick={onClose} className="absolute top-4 right-4 text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                     <X size={24} />
                 </button>
 
-                <h3 className="text-2xl font-bold gradient-text">{title}</h3>
+                <h3 className="text-2xl font-extrabold text-[#0C2D6B] tracking-tight">{title}</h3>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-400 mb-2">Role Title *</label>
+                            <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Role Title *</label>
                             <input
                                 required
                                 type="text"
@@ -60,7 +60,7 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-400 mb-2">Location</label>
+                            <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Location</label>
                             <input
                                 type="text"
                                 value={form.location}
@@ -71,7 +71,7 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-400 mb-2">Job Type</label>
+                            <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Job Type</label>
                             <select
                                 value={form.job_type}
                                 onChange={e => setForm({ ...form, job_type: e.target.value })}
@@ -85,7 +85,7 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
                         </div>
 
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-400 mb-2">Compensation Range</label>
+                            <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Compensation Range</label>
                             <input
                                 type="text"
                                 value={form.compensation}
@@ -97,7 +97,7 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
 
                         {/* Required Skills */}
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-400 mb-2">Required Skills</label>
+                            <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Required Skills</label>
                             <div className="flex gap-2">
                                 <input
                                     type="text"
@@ -120,21 +120,21 @@ function JobFormModal({ initial = EMPTY_FORM, onClose, onSubmit, isPending, titl
                                     {form.required_skills.map(skill => (
                                         <span
                                             key={skill}
-                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/20"
+                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EEF5FF] text-[#1B4FD8] text-[10px] font-extrabold border border-[#1B4FD8]/10"
                                         >
                                             {skill}
-                                            <button type="button" onClick={() => removeSkill(skill)} className="hover:text-red-400">
+                                            <button type="button" onClick={() => removeSkill(skill)} className="hover:text-red-500">
                                                 <X size={12} />
                                             </button>
                                         </span>
                                     ))}
                                 </div>
                             )}
-                            <p className="text-xs text-slate-500 mt-2">These skills will be used to match talent to this role.</p>
+                            <p className="text-xs text-[var(--text-muted)] font-semibold mt-2">These skills will be used to match talent to this role.</p>
                         </div>
 
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-400 mb-2">Description</label>
+                            <label className="block text-[11px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Description</label>
                             <textarea
                                 rows="4"
                                 value={form.description}
@@ -168,15 +168,15 @@ function MatchedTalentsModal({ jobId, onClose }) {
     const filteredMatches = (matches || []).filter(m => m.match_percentage > 50)
 
     return (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <div className="glass-card w-full max-w-4xl p-8 space-y-6 relative bg-slate-900 max-h-[90vh] overflow-y-auto border-amber-500/20 shadow-2xl">
-                <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-slate-100 transition-colors">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="glass-card w-full max-w-4xl p-8 space-y-6 relative bg-white max-h-[90vh] overflow-y-auto border-[var(--border)] shadow-2xl">
+                <button onClick={onClose} className="absolute top-4 right-4 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
                     <X size={24} />
                 </button>
 
                 <div>
-                    <h3 className="text-2xl font-bold gradient-text">Matched High-Caliber Talent</h3>
-                    <p className="text-slate-400 text-sm mt-1">Discover candidates whose skills align perfectly with this role.</p>
+                    <h3 className="text-2xl font-extrabold text-[#0C2D6B] tracking-tight">Matched High-Caliber Talent</h3>
+                    <p className="text-[var(--text-secondary)] font-semibold text-sm mt-1">Discover candidates whose skills align perfectly with this role.</p>
                 </div>
 
                 {isLoading ? (
@@ -188,13 +188,13 @@ function MatchedTalentsModal({ jobId, onClose }) {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {filteredMatches.map(match => (
-                            <div key={match.talent_id} className="glass-card p-6 bg-white/5 border-white/5 hover:border-amber-500/30 transition-all flex items-start gap-4">
+                            <div key={match.talent_id} className="glass-card p-6 bg-[#F8F7F4] border-[var(--border)] hover:border-[#1B4FD8]/30 transition-all flex items-start gap-4">
                                 <div className="flex-1">
-                                    <h4 className="font-bold text-slate-100">{match.name}</h4>
-                                    <p className="text-xs text-slate-400 mb-3">{match.headline}</p>
+                                    <h4 className="font-extrabold text-[var(--text-primary)] uppercase tracking-tight">{match.name}</h4>
+                                    <p className="text-xs text-[var(--text-secondary)] font-semibold mb-3">{match.headline}</p>
                                     <div className="flex flex-wrap gap-1.5">
                                         {match.matched_skills?.map(s => (
-                                            <span key={s} className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-[10px] font-bold border border-emerald-500/20">
+                                            <span key={s} className="px-2 py-0.5 rounded-md bg-[#EEF5FF] text-[#1B4FD8] text-[10px] font-extrabold border border-[#1B4FD8]/20">
                                                 {s}
                                             </span>
                                         ))}
@@ -219,15 +219,15 @@ function ApplicantsModal({ jobId, onClose }) {
     })
 
     return (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <div className="glass-card w-full max-w-2xl p-8 space-y-6 relative bg-slate-900 max-h-[90vh] overflow-y-auto border-emerald-500/20 shadow-2xl">
-                <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-slate-100 transition-colors">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="glass-card w-full max-w-2xl p-8 space-y-6 relative bg-white max-h-[90vh] overflow-y-auto border-[var(--border)] shadow-2xl">
+                <button onClick={onClose} className="absolute top-4 right-4 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
                     <X size={24} />
                 </button>
 
                 <div>
-                    <h3 className="text-2xl font-bold text-emerald-500">Interested Applicants</h3>
-                    <p className="text-slate-400 text-sm mt-1">Talents who have expressed interest in this specific opportunity.</p>
+                    <h3 className="text-2xl font-extrabold text-[#16A34A] tracking-tight">Interested Applicants</h3>
+                    <p className="text-[var(--text-secondary)] font-semibold text-sm mt-1">Talents who have expressed interest in this specific opportunity.</p>
                 </div>
 
                 {isLoading ? (
@@ -239,16 +239,16 @@ function ApplicantsModal({ jobId, onClose }) {
                 ) : (
                     <div className="space-y-4">
                         {applicants.map(app => (
-                            <div key={app.match_id} className="glass-card p-6 bg-white/5 border-white/5 hover:bg-white/10 transition-colors">
+                            <div key={app.match_id} className="glass-card p-6 bg-[#F8F7F4] border-[var(--border)] hover:border-[#16A34A]/30 transition-colors">
                                 <div className="flex justify-between items-start mb-2">
-                                    <h4 className="font-bold text-slate-100">{app.name}</h4>
-                                    <span className="text-[10px] font-bold text-emerald-500 uppercase px-2 py-1 bg-emerald-500/10 rounded-full">
+                                    <h4 className="font-extrabold text-[var(--text-primary)] uppercase tracking-tight">{app.name}</h4>
+                                    <span className="text-[10px] font-extrabold text-[#16A34A] uppercase px-2 py-1 bg-[#F0FDF4] rounded-full border border-[#16A34A]/10">
                                         Interested
                                     </span>
                                 </div>
-                                <p className="text-xs text-slate-400 mb-4">{app.headline}</p>
+                                <p className="text-xs text-[var(--text-secondary)] font-semibold mb-4">{app.headline}</p>
                                 {app.message && (
-                                    <div className="p-3 bg-slate-950/50 rounded-lg border border-white/5 italic text-sm text-slate-300">
+                                    <div className="p-3 bg-white rounded-lg border border-[var(--border)] italic text-sm text-[var(--text-secondary)]">
                                         "{app.message}"
                                     </div>
                                 )}
@@ -312,7 +312,7 @@ export default function JobBoard() {
 
             <div className="p-8 space-y-8 max-w-7xl mx-auto">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-slate-100">Active Opportunities</h2>
+                    <h2 className="text-xl font-extrabold text-[#0C2D6B]">Active Opportunities</h2>
                     <button onClick={() => setIsAdding(true)} className="premium-button btn-primary flex items-center gap-2 py-2 px-6">
                         <Plus size={18} /> Post Job
                     </button>
@@ -368,12 +368,12 @@ export default function JobBoard() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {jobs.map((job) => (
-                            <div key={job.id} className="glass-card p-8 group border-white/5 hover:border-emerald-500/20 transition-all bg-slate-900/40 relative">
+                            <div key={job.id} className="glass-card p-8 group border-[var(--border)] hover:border-[#16A34A]/30 transition-all bg-white relative">
                                 {/* Action Buttons */}
                                 <div className="absolute top-5 right-5 flex gap-2">
                                     <button
                                         onClick={() => setEditingJob(job)}
-                                        className="p-2 rounded-lg bg-amber-500/5 text-amber-500/40 hover:text-amber-500 hover:bg-amber-500/10 transition-all"
+                                        className="p-2 rounded-lg bg-amber-50 text-amber-500/60 hover:text-amber-600 hover:bg-amber-100 transition-all"
                                         title="Edit"
                                     >
                                         <Pencil size={15} />
@@ -381,7 +381,7 @@ export default function JobBoard() {
                                     <button
                                         onClick={() => deleteMutation.mutate(job.id)}
                                         disabled={deleteMutation.isPending}
-                                        className="p-2 rounded-lg bg-red-500/5 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                                        className="p-2 rounded-lg bg-red-50 text-red-500/60 hover:text-red-600 hover:bg-red-100 transition-all"
                                         title="Delete"
                                     >
                                         <Trash2 size={15} />
@@ -390,36 +390,36 @@ export default function JobBoard() {
 
                                 <div className="flex flex-col h-full">
                                     <div className="flex-1 space-y-4 pr-16">
-                                        <h3 className="text-xl font-bold text-slate-100 group-hover:text-emerald-500 transition-colors uppercase tracking-tight">
+                                        <h3 className="text-xl font-extrabold text-[#0C2D6B] group-hover:text-[#16A34A] transition-colors uppercase tracking-tight">
                                             {job.title}
                                         </h3>
 
                                         <div className="grid grid-cols-2 gap-3">
-                                            <div className="flex items-center gap-2 text-slate-400">
-                                                <MapPin size={13} className="text-emerald-500" />
-                                                <span className="text-xs">{job.location || 'Remote'}</span>
+                                            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                                                <MapPin size={13} className="text-[#16A34A]" />
+                                                <span className="text-xs font-semibold">{job.location || 'Remote'}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-slate-400">
-                                                <Clock size={13} className="text-emerald-500" />
-                                                <span className="text-xs capitalize">{job.job_type}</span>
+                                            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                                                <Clock size={13} className="text-[#16A34A]" />
+                                                <span className="text-xs capitalize font-semibold">{job.job_type}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-slate-400 col-span-2">
-                                                <DollarSign size={13} className="text-emerald-500" />
-                                                <span className="text-xs text-slate-200 font-bold">{job.compensation || 'Competitive'}</span>
+                                            <div className="flex items-center gap-2 text-[var(--text-secondary)] col-span-2">
+                                                <DollarSign size={13} className="text-[#16A34A]" />
+                                                <span className="text-xs text-[var(--text-primary)] font-extrabold">{job.compensation || 'Competitive'}</span>
                                             </div>
                                         </div>
 
                                         {/* Skill Tags */}
                                         {job.required_skills?.length > 0 && (
                                             <div className="space-y-2">
-                                                <div className="flex items-center gap-1.5 text-slate-500 text-[10px] uppercase font-bold">
+                                                <div className="flex items-center gap-1.5 text-[var(--text-secondary)] text-[10px] font-extrabold uppercase tracking-wide">
                                                     <Tag size={10} /> Required Skills
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {job.required_skills.map(skill => (
                                                         <span
                                                             key={skill}
-                                                            className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold border border-amber-500/20"
+                                                            className="px-2.5 py-0.5 rounded-full bg-[#F0FDF4] text-[#16A34A] text-[10px] font-extrabold border border-[#16A34A]/10"
                                                         >
                                                             {skill}
                                                         </span>
@@ -428,21 +428,21 @@ export default function JobBoard() {
                                             </div>
                                         )}
 
-                                        <p className="text-sm text-slate-400 leading-relaxed line-clamp-2">
+                                        <p className="text-sm text-[var(--text-secondary)] font-semibold leading-relaxed line-clamp-2">
                                             {job.description}
                                         </p>
                                     </div>
 
-                                    <div className="pt-6 mt-6 border-t border-white/5 grid grid-cols-2 gap-4">
+                                    <div className="pt-6 mt-6 border-t border-[var(--border)] grid grid-cols-2 gap-4">
                                         <button
                                             onClick={() => setViewingApplicants(job.id)}
-                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-amber-500/5 text-amber-500 hover:bg-amber-500/10 transition-all font-bold text-xs"
+                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition-all font-extrabold text-[11px] uppercase tracking-wider"
                                         >
                                             <UserCheck size={14} /> View Applicants
                                         </button>
                                         <button
                                             onClick={() => setViewingMatches(job.id)}
-                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500/10 transition-all font-bold text-xs"
+                                            className="flex items-center justify-center gap-2 py-2 rounded-xl bg-[#F0FDF4] text-[#16A34A] hover:bg-[#DCFCE7] transition-all font-extrabold text-[11px] uppercase tracking-wider"
                                         >
                                             <Users size={14} /> View Matches
                                         </button>

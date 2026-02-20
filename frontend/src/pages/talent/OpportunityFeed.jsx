@@ -14,14 +14,14 @@ function InterestModal({ job, onClose, onSend, isPending }) {
   )
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="glass-card w-full max-w-lg p-8 space-y-6 border-amber-500/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="glass-card w-full max-w-lg p-8 space-y-6 bg-white border-[var(--border)] shadow-2xl">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-100">Express Interest</h2>
-            <p className="text-sm text-amber-500/80 mt-1">{job.title} · {job.startup_name}</p>
+            <h2 className="text-xl font-extrabold text-[#0C2D6B]">Express Interest</h2>
+            <p className="text-sm text-[var(--accent)] font-bold mt-1">{job.title} · {job.startup_name}</p>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-300 transition-colors">
+          <button onClick={onClose} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -42,7 +42,7 @@ function InterestModal({ job, onClose, onSend, isPending }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-slate-200 text-sm font-medium transition-colors"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--primary)] text-sm font-extrabold transition-colors uppercase tracking-wide"
           >
             Cancel
           </button>
@@ -132,13 +132,13 @@ export default function OpportunityFeed() {
             {opportunities.map((opp) => {
               const alreadySent = sentJobs.has(opp.job_id)
               return (
-                <div key={opp.job_id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full bg-slate-900/40">
+                <div key={opp.job_id} className="glass-card group hover:border-[#1B4FD8]/30 transition-all p-8 flex flex-col h-full bg-white">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1 pr-4">
-                      <h3 className="text-lg font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight leading-tight">
+                      <h3 className="text-lg font-extrabold text-[#0C2D6B] group-hover:text-[#1B4FD8] transition-colors uppercase tracking-tight leading-tight">
                         {opp.title}
                       </h3>
-                      <p className="text-amber-500/80 mt-1 uppercase tracking-widest text-[10px] font-bold">
+                      <p className="text-[#1B4FD8] mt-1 uppercase tracking-[0.1em] text-[10px] font-extrabold">
                         {opp.startup_name} • {opp.industry}
                       </p>
                     </div>
@@ -146,29 +146,29 @@ export default function OpportunityFeed() {
                   </div>
 
                   <div className="space-y-2.5 mb-5 flex-1">
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <MapPin size={13} className="text-amber-500 shrink-0" />
-                      <span className="text-xs">{opp.location || 'Remote'}</span>
+                    <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                      <MapPin size={13} className="text-[#1B4FD8] shrink-0" />
+                      <span className="text-xs font-semibold">{opp.location || 'Remote'}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <Clock size={13} className="text-amber-500 shrink-0" />
-                      <span className="text-xs capitalize">{opp.job_type}</span>
+                    <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                      <Clock size={13} className="text-[#1B4FD8] shrink-0" />
+                      <span className="text-xs capitalize font-semibold">{opp.job_type}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <DollarSign size={13} className="text-amber-500 shrink-0" />
-                      <span className="text-xs text-slate-200 font-bold">{opp.compensation || 'Competitive'}</span>
+                    <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                      <DollarSign size={13} className="text-[#1B4FD8] shrink-0" />
+                      <span className="text-xs text-[var(--text-primary)] font-extrabold">{opp.compensation || 'Competitive'}</span>
                     </div>
 
                     {opp.required_skills?.length > 0 && (
                       <div className="pt-1">
-                        <div className="flex items-center gap-1 text-slate-500 text-[10px] uppercase font-bold mb-2">
+                        <div className="flex items-center gap-1 text-[var(--text-secondary)] text-[10px] uppercase font-extrabold mb-2 tracking-wider">
                           <Tag size={10} /> Skills Needed
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {opp.required_skills.map(skill => (
                             <span
                               key={skill}
-                              className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold border border-amber-500/20"
+                              className="px-2 py-0.5 rounded-full bg-[#EEF5FF] text-[#1B4FD8] text-[10px] font-extrabold border border-[#1B4FD8]/10"
                             >
                               {skill}
                             </span>
@@ -184,16 +184,16 @@ export default function OpportunityFeed() {
                     )}
                   </div>
 
-                  <div className="pt-5 border-t border-white/5 flex items-center justify-between">
+                  <div className="pt-5 border-t border-[var(--border)] flex items-center justify-between">
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase">Skill Match</span>
-                      <span className={`text-[10px] font-bold uppercase mt-0.5 ${opp.match_percentage >= 70 ? 'text-emerald-500' : opp.match_percentage >= 40 ? 'text-amber-500' : 'text-slate-500'}`}>
+                      <span className="text-[10px] font-extrabold text-[var(--text-secondary)] uppercase tracking-wide">Skill Match</span>
+                      <span className={`text-[10px] font-extrabold uppercase mt-0.5 ${opp.match_percentage >= 70 ? 'text-[#16A34A]' : opp.match_percentage >= 40 ? 'text-[#D97706]' : 'text-[var(--text-secondary)]'}`}>
                         {opp.match_percentage >= 70 ? 'Strong' : opp.match_percentage >= 40 ? 'Partial' : 'Open'}
                       </span>
                     </div>
 
                     {alreadySent ? (
-                      <div className="flex items-center gap-1.5 text-emerald-500 text-xs font-bold">
+                      <div className="flex items-center gap-1.5 text-[#16A34A] text-xs font-extrabold uppercase">
                         <CheckCircle size={14} /> Interest Sent
                       </div>
                     ) : (

@@ -73,26 +73,20 @@ export default function InvestorThesisBuilder() {
 
       <div className="p-8 space-y-8 max-w-7xl mx-auto">
         {profile && (
-          <div className="glass-card bg-emerald-500/5 border-emerald-500/20 p-8 flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-slate-100 mb-2">Thesis Robustness</h3>
-              <p className="text-sm text-slate-400">A complete thesis helps our AI engine route high-alpha deals to your pipeline.</p>
-            </div>
-            <div className="w-full md:w-64">
-              <ProfileCompleteness
-                score={profile.completeness_score || 0}
-                missingFields={[]}
-              />
-            </div>
+          <div className="w-full">
+            <ProfileCompleteness
+              score={profile.completeness_score || 0}
+              missingFields={[]}
+            />
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <section className="glass-card p-8 space-y-8">
-              <h3 className="text-xl font-semibold gradient-text">Investment Philosophy</h3>
+            <section className="glass-card p-8 space-y-6">
+              <h3 className="text-xl font-extrabold text-[var(--text-primary)]">Investment Philosophy</h3>
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-4 font-mono uppercase tracking-widest text-[10px]">Your Thesis Statement</label>
+                <label className="block text-sm font-extrabold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Your Thesis Statement</label>
                 <textarea
                   value={formData.thesis_text}
                   onChange={(e) => setFormData({ ...formData, thesis_text: e.target.value })}
@@ -107,7 +101,7 @@ export default function InvestorThesisBuilder() {
               <h3 className="text-xl font-semibold mb-8 gradient-text">Organization Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Investor Full Name</label>
+                  <label className="block text-sm font-bold text-[var(--text-secondary)] mb-2">Investor Full Name</label>
                   <input
                     type="text"
                     value={formData.name}
@@ -116,7 +110,7 @@ export default function InvestorThesisBuilder() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Fund / Entity Name</label>
+                  <label className="block text-sm font-bold text-[var(--text-secondary)] mb-2">Fund / Entity Name</label>
                   <input
                     type="text"
                     value={formData.fund}
@@ -125,7 +119,7 @@ export default function InvestorThesisBuilder() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Investor Class</label>
+                  <label className="block text-sm font-bold text-[var(--text-secondary)] mb-2">Investor Class</label>
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
@@ -138,7 +132,7 @@ export default function InvestorThesisBuilder() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Geographic Mandate</label>
+                  <label className="block text-sm font-bold text-[var(--text-secondary)] mb-2">Geographic Mandate</label>
                   <select
                     value={formData.geography_focus}
                     onChange={(e) => setFormData({ ...formData, geography_focus: e.target.value })}
@@ -220,9 +214,9 @@ export default function InvestorThesisBuilder() {
               </div>
             </section>
 
-            <div className="glass-card p-6 bg-amber-500/5 border-amber-500/10">
-              <h4 className="text-sm font-bold text-amber-500 mb-2 uppercase tracking-wide">Pro Tip</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="glass-card p-6 bg-[#FEF3C7]/20 border-[#D97706]/20">
+              <h4 className="text-sm font-extrabold text-[#D97706] mb-2 uppercase tracking-wide">Pro Tip</h4>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                 Be specific about your "anti-thesis" or what you avoid. This improves match quality by 40%.
               </p>
             </div>

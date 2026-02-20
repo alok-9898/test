@@ -156,6 +156,7 @@ async def match_talent_to_startup(
     startup_embedding = startup_embedding_result.scalars().first()
     
     final_score = 0.0
+    semantic_score = 0.0
     # Final Score calculation
     # If we have both embeddings, use hybrid scoring
     if talent_embedding and startup_embedding:

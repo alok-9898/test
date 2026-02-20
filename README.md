@@ -2,7 +2,7 @@
 
 A three-sided platform connecting Founders, Talent, and Investors in Nepal's startup ecosystem.
 
-## 🏗️ Architecture
+## Architecture
 
 - **Backend**: FastAPI (Python 3.11+) with async PostgreSQL + pgvector
 - **Frontend**: React + Vite + Tailwind CSS
@@ -10,7 +10,7 @@ A three-sided platform connecting Founders, Talent, and Investors in Nepal's sta
 - **AI**: OpenAI API for embeddings and pitch feedback
 - **Deployment**: AWS Free Tier (EC2, RDS, S3, CloudFront)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Option 1: Mock Data Mode (No Database Required) ⚡
 
@@ -83,7 +83,7 @@ echo "VITE_API_URL=http://localhost:8000" > .env
 npm run dev
 ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 .
@@ -114,7 +114,7 @@ npm run dev
 └── .env.example
 ```
 
-## 🔑 Key Features
+## Key Features
 
 ### Hybrid Matching Engine
 - **60% Keyword Match**: Jaccard similarity on skills/industries
@@ -129,17 +129,17 @@ npm run dev
 - **Talent**: Browse opportunities, see match scores, apply to roles
 - **Investors**: Define thesis, view deal flow, track portfolio
 
-## 🔐 Environment Variables
+## Environment Variables
 
 See `.env.example` for all required variables.
 
-## 📝 API Documentation
+## API Documentation
 
 Once the backend is running, visit `http://localhost:8000/docs` for interactive API documentation.
 
-## 🚧 AWS Deployment
+##  AWS Deployment
 
-⚠️ **Important**: Before deploying to AWS, ensure you have:
+ **Important**: Before deploying to AWS, ensure you have:
 - RDS PostgreSQL instance with pgvector extension
 - S3 buckets for file storage
 - EC2 instance configured
@@ -147,6 +147,3 @@ Once the backend is running, visit `http://localhost:8000/docs` for interactive 
 
 See the main prompt for detailed AWS Free Tier deployment instructions.
 
-## 📄 License
-
-Built for Nepal. Ready for the World.

@@ -57,50 +57,50 @@ export default function TalentMatchList() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredMatches.map((match) => (
-              <div key={match.talent_id} className="glass-card group hover:border-amber-500/30 transition-all p-8 flex flex-col h-full bg-slate-900/40">
+              <div key={match.talent_id} className="glass-card group hover:border-[#1B4FD8]/30 transition-all p-8 flex flex-col h-full bg-white">
                 <div className="flex items-start justify-between mb-6">
-                  <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center font-bold text-amber-500 text-2xl border border-white/5 shadow-inner uppercase">
+                  <div className="w-16 h-16 bg-[#F8F7F4] rounded-2xl flex items-center justify-center font-extrabold text-[#1B4FD8] text-2xl border border-[var(--border)] shadow-inner uppercase">
                     {match.name?.[0]}
                   </div>
                   <MatchScoreRing score={match.match_percentage} size={50} />
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight mb-2">
+                <h3 className="text-xl font-extrabold text-[#0C2D6B] group-hover:text-[#1B4FD8] transition-colors uppercase tracking-tight mb-2">
                   {match.name}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-2">
+                <p className="text-[var(--text-secondary)] text-sm font-semibold leading-relaxed mb-6 line-clamp-2">
                   {match.headline}
                 </p>
 
                 <div className="flex-1 space-y-6">
                   <div>
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Core Expertise</h4>
+                    <h4 className="text-[10px] font-extrabold text-[var(--accent)] uppercase tracking-widest mb-3">Core Expertise</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {(match.matched_skills || []).map(skill => (
-                        <span key={skill} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[10px] text-emerald-500 font-bold border-emerald-500/20">
+                        <span key={skill} className="px-2 py-0.5 rounded-md bg-[#F0FDF4] border border-[#16A34A]/20 text-[10px] text-[#16A34A] font-extrabold">
                           {skill}
                         </span>
                       ))}
                       {(match.missing_skills || []).slice(0, 2).map(skill => (
-                        <span key={skill} className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[10px] text-slate-500 font-medium">
+                        <span key={skill} className="px-2 py-0.5 rounded-md bg-[#F8F7F4] border border-[var(--border)] text-[10px] text-[var(--text-muted)] font-extrabold">
                           {skill}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-slate-500">
-                    <Briefcase size={12} className="text-amber-500" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">Available for Hire</span>
+                  <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                    <Briefcase size={12} className="text-[#16A34A]" />
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest">Available for Hire</span>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-6 mt-6 border-t border-[var(--border)] flex items-center justify-between">
                   <div className="flex gap-3">
-                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                    <button className="p-2 rounded-lg bg-[#F8F7F4] text-[var(--text-secondary)] hover:text-[#1B4FD8] hover:bg-[#EEF5FF] transition-all border border-[var(--border)]">
                       <Mail size={16} />
                     </button>
-                    <button className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 transition-all">
+                    <button className="p-2 rounded-lg bg-[#F8F7F4] text-[var(--text-secondary)] hover:text-[#1B4FD8] hover:bg-[#EEF5FF] transition-all border border-[var(--border)]">
                       <LinkIcon size={16} />
                     </button>
                   </div>

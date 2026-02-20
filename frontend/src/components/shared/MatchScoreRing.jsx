@@ -22,7 +22,7 @@ export default function MatchScoreRing({ score, size = 96 }) {
           cx={svgSize / 2}
           cy={svgSize / 2}
           r={radius}
-          stroke="rgba(255,255,255,0.07)"
+          stroke="rgba(0,0,0,0.05)"
           strokeWidth="5"
           fill="none"
         />
@@ -42,7 +42,7 @@ export default function MatchScoreRing({ score, size = 96 }) {
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <span
-          className="font-black text-white"
+          className="font-black text-[var(--text-primary)]"
           style={{ fontSize: svgSize * 0.21 }}
         >
           {Math.round(score || 0)}%
