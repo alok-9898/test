@@ -1,4 +1,4 @@
-# NepLaunch - Startup Marketplace for Nepal
+# LaunchNepal - Startup Marketplace for Nepal
 
 A three-sided platform connecting Founders, Talent, and Investors in Nepal's startup ecosystem.
 
