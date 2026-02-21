@@ -7,12 +7,12 @@ A three-sided platform connecting Founders, Talent, and Investors in Nepal's sta
 - **Backend**: FastAPI (Python 3.11+) with async MySQL (`aiomysql`)
 - **Frontend**: React + Vite + Tailwind CSS
 - **Database**: MySQL 8.0+
-- **AI**: OpenAI API for embeddings, pitch feedback, and gap analysis
+- **AI**: Gemini API for embeddings, pitch feedback, and gap analysis
 - **Deployment**: AWS Free Tier (EC2, RDS, S3, CloudFront)
 
 ## Quick Start
 
-### Option 1: Mock Data Mode (No Database Required) ⚡
+### Option 1: Mock Data Mode (No Database Required)
 
 **Fastest way to get started!**
 
@@ -83,7 +83,7 @@ npm run dev
 │   ├── routers/             # API Route handlers
 │   └── utility/debug scripts:
 │       ├── check_schema.py      # Verify database schema
-│       ├── check_embeddings.py  # Verify OpenAI embeddings
+│       ├── check_embeddings.py  # Verify Gemini embeddings
 │       ├── debug_matches.py     # Debug matching logic
 │       └── wipe_db.py           # Clear all data
 ├── frontend/
@@ -104,7 +104,7 @@ npm run dev
 
 ### Hybrid Matching Engine
 - **60% Keyword Match**: Jaccard similarity on skills/industries.
-- **40% Semantic Match**: Cosine similarity using OpenAI `text-embedding-3-small` embeddings.
+- **40% Semantic Match**: Cosine similarity using Gemini `text-embedding-3-small` embeddings.
 
 ### AI Features
 - **Pitch Co-Pilot**: Get feedback on your pitch from a Kathmandu-based investor perspective.
@@ -130,7 +130,7 @@ The project includes several scripts for maintenance and debugging:
 See `.env.example` for all required variables including:
 - `DATABASE_URL`: MySQL connection string.
 - `SECRET_KEY`: JWT signing key.
-- `OPENAI_API_KEY`: Required for semantic matching and AI features.
+- `GEMINI_API_KEY`: Required for semantic matching and AI features.
 
 ## API Documentation
 

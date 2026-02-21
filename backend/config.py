@@ -8,15 +8,15 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # Database
-    DATABASE_URL: str = "mysql+aiomysql://root:alok@localhost:3306/launchnepal"
+    DATABASE_URL: Optional[str] = None
     DB_HOST: Optional[str] = None
     DB_PORT: int = 3306
-    DB_USER: Optional[str] = "root"
-    DB_PASSWORD: Optional[str] = "alok"
-    DB_NAME: str = "launchnepal"
+    DB_USER: Optional[str] = None
+    DB_PASSWORD: Optional[str] = None
+    DB_NAME: Optional[str] = None
     
     # JWT
-    SECRET_KEY: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+    SECRET_KEY: Optional[str] = None
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     USE_MOCK_DATA: bool = False  # Set to False when database is ready (can also be set via env var)
     
     class Config:
-        env_file = ".env"
+        env_file = (".env", "../.env")
         case_sensitive = True
 
 
