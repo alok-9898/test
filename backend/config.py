@@ -27,8 +27,8 @@ class Settings(BaseSettings):
     S3_PUBLIC_BUCKET: str = "neplaunch-public"
     S3_PRIVATE_BUCKET: str = "neplaunch-private"
     
-    # OpenAI
-    OPENAI_API_KEY: Optional[str] = None
+    # Gemini
+    GOOGLE_API_KEY: Optional[str] = None
     
     # CORS
     CORS_ORIGINS: Union[list[str], str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:3000"]

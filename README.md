@@ -4,10 +4,10 @@ A three-sided platform connecting Founders, Talent, and Investors in Nepal's sta
 
 ## Architecture
 
-- **Backend**: FastAPI (Python 3.11+) with async PostgreSQL + pgvector
+- **Backend**: FastAPI (Python 3.11+) with async MySQL (`aiomysql`)
 - **Frontend**: React + Vite + Tailwind CSS
-- **Database**: PostgreSQL 15+ with pgvector extension
-- **AI**: OpenAI API for embeddings and pitch feedback
+- **Database**: MySQL 8.0+
+- **AI**: OpenAI API for embeddings, pitch feedback, and gap analysis
 - **Deployment**: AWS Free Tier (EC2, RDS, S3, CloudFront)
 
 ## Quick Start
@@ -35,115 +35,104 @@ npm run dev
    - **Talent**: `talent@neplaunch.com` / `password123`
    - **Investor**: `investor@neplaunch.com` / `password123`
 
-See `backend/README_MOCK_DATA.md` for more details.
-
 ### Option 2: Real Database Setup
 
-1. Install dependencies:
+1. **Install dependencies**:
 ```bash
+# In the root or backend directory
+pip install -r requirements.txt
+```
+
+2. **Set up environment variables**:
+```bash
+cp .env.example .env
+# Edit .env with your MySQL credentials
+# Ensure USE_MOCK_DATA=False
+```
+
+3. **Initialize database**:
+```bash
+# Make sure MySQL is running and the database 'launchnepal' exists
+python backend/migrate_all.py
+```
+
+4. **Run Application**:
+```bash
+# Terminal 1: Backend
 cd backend
-pip install -r ../requirements.txt
-```
-
-2. Set up environment variables:
-```bash
-cp ../.env.example .env
-# Edit .env with your credentials
-# Set USE_MOCK_DATA=False
-```
-
-3. Initialize database:
-```bash
-# Make sure PostgreSQL is running with pgvector extension
 python run.py
-```
 
-4. Run backend:
-```bash
-cd backend
-python run.py
-```
-
-### Frontend Setup
-
-1. Install dependencies:
-```bash
+# Terminal 2: Frontend
 cd frontend
-npm install
-```
-
-2. Set up environment:
-```bash
-# Create .env file
-echo "VITE_API_URL=http://localhost:8000" > .env
-```
-
-3. Run frontend:
-```bash
 npm run dev
 ```
 
-##  Project Structure
+## Project Structure
 
 ```
 .
 ├── backend/
 │   ├── main.py              # FastAPI app entry point
 │   ├── config.py            # Configuration settings
-│   ├── database.py          # Database connection
+│   ├── database.py          # Database connection (MySQL)
 │   ├── models.py            # SQLAlchemy models
 │   ├── auth.py              # Authentication utilities
-│   ├── matching.py          # Hybrid matching engine
-│   └── routers/
-│       ├── auth.py          # Auth routes
-│       ├── founders.py      # Founder/Startup routes
-│       ├── talent.py        # Talent routes
-│       ├── investors.py     # Investor routes
-│       ├── matches.py       # Matching routes
-│       └── ai.py            # AI features
+│   ├── matching.py          # Hybrid matching engine (Keyword + Semantic)
+│   ├── migrate_all.py       # Main migration script
+│   ├── mock_data.py         # Mock data generator
+│   ├── routers/             # API Route handlers
+│   └── utility/debug scripts:
+│       ├── check_schema.py      # Verify database schema
+│       ├── check_embeddings.py  # Verify OpenAI embeddings
+│       ├── debug_matches.py     # Debug matching logic
+│       └── wipe_db.py           # Clear all data
 ├── frontend/
 │   ├── src/
 │   │   ├── api/             # API client functions
-│   │   ├── components/      # React components
-│   │   ├── contexts/        # React contexts
-│   │   ├── hooks/           # Custom hooks
-│   │   └── pages/           # Page components
+│   │   ├── components/      # Reusable UI components
+│   │   ├── contexts/        # Auth and UI contexts
+│   │   ├── hooks/           # Custom React hooks
+│   │   └── pages/           # Application views
 │   └── vite.config.js
-├── requirements.txt
-├── package.json
-└── .env.example
+├── docker-compose.yml       # Docker configuration
+├── requirements.txt         # Python dependencies
+├── package.json             # Root package info
+└── .env.example             # Template for environment variables
 ```
 
 ## Key Features
 
 ### Hybrid Matching Engine
-- **60% Keyword Match**: Jaccard similarity on skills/industries
-- **40% Semantic Match**: Cosine similarity using OpenAI embeddings
+- **60% Keyword Match**: Jaccard similarity on skills/industries.
+- **40% Semantic Match**: Cosine similarity using OpenAI `text-embedding-3-small` embeddings.
 
 ### AI Features
-- Pitch Co-Pilot: Get feedback on your pitch from a Kathmandu-based investor perspective
-- Team Gap Analysis: Identify missing critical roles
+- **Pitch Co-Pilot**: Get feedback on your pitch from a Kathmandu-based investor perspective.
+- **Team Gap Analysis**: Identify missing critical roles in your startup team.
+- **Automated Embeddings**: Automatic vector representation of profiles for semantic search.
 
 ### Three-Sided Platform
-- **Founders**: Post roles, find talent, connect with investors
-- **Talent**: Browse opportunities, see match scores, apply to roles
-- **Investors**: Define thesis, view deal flow, track portfolio
+- **Founders**: Post roles, find talent, connect with investors.
+- **Talent**: Browse opportunities, see match scores, apply to roles.
+- **Investors**: Define thesis, view deal flow, track portfolio.
+
+## Utility Scripts
+
+The project includes several scripts for maintenance and debugging:
+- `python backend/migrate_all.py`: Initialize/update database tables.
+- `python backend/mock_data.py`: Populate the database with sample data.
+- `python backend/wipe_db.py`: Clear all tables (Use with caution).
+- `python backend/check_users.py`: List all registered users.
+- `python backend/debug_matches.py`: Test matching scores between specific users.
 
 ## Environment Variables
 
-See `.env.example` for all required variables.
+See `.env.example` for all required variables including:
+- `DATABASE_URL`: MySQL connection string.
+- `SECRET_KEY`: JWT signing key.
+- `OPENAI_API_KEY`: Required for semantic matching and AI features.
 
 ## API Documentation
 
-Once the backend is running, visit `http://localhost:8000/docs` for interactive API documentation.
-
-##  AWS Deployment
-
- **Important**: Before deploying to AWS, ensure you have:
-- RDS PostgreSQL instance with pgvector extension
-- S3 buckets for file storage
-- EC2 instance configured
-- All credentials in `.env`
-
-See the main prompt for detailed AWS Free Tier deployment instructions.
+Once the backend is running, visit `http://localhost:8000/docs` for interactive API documentation (Swagger UI).
 

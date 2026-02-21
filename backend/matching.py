@@ -4,11 +4,15 @@ from sqlalchemy import select, func, text
 from sqlalchemy.orm import selectinload
 from models import User, TalentProfile, StartupProfile, InvestorProfile, Embedding, UserRole
 from typing import List, Dict, Optional
-from openai import AsyncOpenAI
 from config import settings
 from datetime import datetime
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+import asyncio
 
-client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY) if settings.OPENAI_API_KEY else None
+embedder = GoogleGenerativeAIEmbeddings(
+    model="models/gemini-embedding-001",
+    google_api_key=settings.GOOGLE_API_KEY
+) if settings.GOOGLE_API_KEY else None
 
 
 def cosine_similarity(v1: List[float], v2: List[float]) -> float:
@@ -27,19 +31,26 @@ def cosine_similarity(v1: List[float], v2: List[float]) -> float:
 
 
 async def generate_embedding(text: str) -> List[float]:
-    """Generate embedding using OpenAI text-embedding-3-small."""
-    if not text or not client:
-        return [0.0] * 1536
-    
+    """Generate embedding using Google Gemini gemini-embedding-001."""
+    # gemini-embedding-001 output dimension is 768
+    EMBEDDING_DIM = 768
+
+    if not text or not embedder:
+        return [0.0] * EMBEDDING_DIM
+
     try:
-        response = await client.embeddings.create(
-            model="text-embedding-3-small",
-            input=text
+        # LangChain's embedder is sync — run in thread to keep async safe
+        # use embed_query for single string to avoid batching overhead if possible, 
+        # though embed_documents works too.
+        vector = await asyncio.get_event_loop().run_in_executor(
+            None,
+            embedder.embed_query,
+            text
         )
-        return response.data[0].embedding
+        return vector
     except Exception as e:
         print(f"Error generating embedding: {e}")
-        return [0.0] * 1536
+        return [0.0] * EMBEDDING_DIM
 
 
 async def store_embedding(db: AsyncSession, user_id: str, embedding: List[float], text_source: str):

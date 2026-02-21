@@ -6,17 +6,19 @@ from database import get_db
 from models import User, UserRole
 from dependencies import get_current_user
 from config import settings
-from openai import AsyncOpenAI
 from mock_data import MOCK_PITCH_FEEDBACK, MOCK_TEAM_GAP_ANALYSIS
+from langchain_google_genai import ChatGoogleGenerativeAI
+import json
+
+chat_model = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    google_api_key=settings.GOOGLE_API_KEY
+) if settings.GOOGLE_API_KEY else None
 
 router = APIRouter()
 
-client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY) if settings.OPENAI_API_KEY else None
-
-
 class PitchFeedbackRequest(BaseModel):
     pitch_text: str
-
 
 @router.post("/pitch-feedback")
 async def get_pitch_feedback(
@@ -34,6 +36,9 @@ async def get_pitch_feedback(
         await asyncio.sleep(1)  # Simulate API delay
         return MOCK_PITCH_FEEDBACK
     
+    if not chat_model:
+        raise HTTPException(status_code=500, detail="Gemini API key not configured")
+
     prompt = f"""Act as a Kathmandu-based Angel Investor. Critique this pitch based on Market Size in Nepal and Team-Market fit.
 
 Pitch:
@@ -52,24 +57,23 @@ Provide structured feedback in JSON format with the following sections:
 10. suggestions (array of strings)
 """
     
-    if not client:
-        raise HTTPException(status_code=500, detail="OpenAI API key not configured")
-    
     try:
-        response = await client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a Kathmandu-based Angel Investor providing structured pitch feedback."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7
-        )
+        # Use LangChain's invoke for Gemini
+        response = await chat_model.ainvoke([
+            ("system", "You are a Kathmandu-based Angel Investor providing structured pitch feedback."),
+            ("user", prompt)
+        ])
         
-        feedback_text = response.choices[0].message.content
+        feedback_text = response.content
         
         # Try to parse as JSON, fallback to text
-        import json
         try:
+            # Clean up potential markdown formatting in response
+            if "```json" in feedback_text:
+                feedback_text = feedback_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in feedback_text:
+                feedback_text = feedback_text.split("```")[1].split("```")[0].strip()
+            
             feedback = json.loads(feedback_text)
         except:
             feedback = {"raw_feedback": feedback_text}
